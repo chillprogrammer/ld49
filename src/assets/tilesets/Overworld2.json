@@ -1,0 +1,14 @@
+{ "columns":25,
+ "image":"..\/Buch\/tiles.png",
+ "imageheight":224,
+ "imagewidth":400,
+ "margin":0,
+ "name":"Overworld2",
+ "spacing":0,
+ "tilecount":350,
+ "tiledversion":"1.6.0",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.6"
+}
