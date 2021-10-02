@@ -41,7 +41,7 @@ export class TitleScreen {
         this.playButton = Sprite.from(Texture.WHITE);
         this.playButton.tint = this.BUTTON_COLOR;
         this.playButton.scale.set(PixiManager.INITIAL_WIDTH / 42, 5);
-        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width / 2, PixiManager.INITIAL_HEIGHT / 2);
+        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width / 2, PixiManager.INITIAL_HEIGHT / 1.5);
         (<any>this.playButton).interactive = true;
         this.container.addChild(this.playButton);
 
@@ -55,7 +55,7 @@ export class TitleScreen {
         this.titleText.style.dropShadowDistance = 4;
         this.titleText.style.dropShadowColor = '0x222222';
         this.titleText.x = PixiManager.INITIAL_WIDTH / 2;
-        this.titleText.y = 48;
+        this.titleText.y = PixiManager.INITIAL_HEIGHT / 4.5;
         this.titleText.anchor.x = 0.5
         this.container.addChild(this.titleText);
 
@@ -103,13 +103,14 @@ export class TitleScreen {
     update(delta: number) {
         const maxRight: number = 5;
         const maxLeft: number = -5;
-        const rotateSpeed = 0.2;
+        const rotateSpeed = 0.2*delta;
+
         if (this.rotateFlag === 1) {
-            this.titleAngle += rotateSpeed * delta;
+            this.titleAngle += rotateSpeed;
             this.titleText.angle = this.titleAngle;
         }
         else if (this.rotateFlag === 0) {
-            this.titleAngle -= rotateSpeed * delta;
+            this.titleAngle -= rotateSpeed;
             this.titleText.angle = this.titleAngle;
         }
 
