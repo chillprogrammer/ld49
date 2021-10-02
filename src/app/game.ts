@@ -33,11 +33,35 @@ export class Game {
         this.init();
     }
 
+
+    scrollFunction(e: WheelEvent) {
+        const MAX_ZOOM = 6;
+        const MIN_ZOOM = 0.5;
+        if (e.deltaY < 0) {
+            if (Camera.zoom < MAX_ZOOM) {
+                Camera.zoom += 0.01;
+            } else {
+                Camera.zoom = MAX_ZOOM;
+            }
+        }
+        else {
+            if (Camera.zoom > MIN_ZOOM) {
+                Camera.zoom -= 0.01;
+            } else {
+                Camera.zoom = MIN_ZOOM
+            }
+        }
+
+        console.log(Camera.zoom);
+    };
+
     /**
      * The initial function that runs for the Game object.
      * Called from the App loader class.
      */
     private init() {
+        addEventListener('wheel', this.scrollFunction.bind(this));
+
 
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
@@ -54,7 +78,6 @@ export class Game {
     }
 
     titleScreenPlayButtonClicked() {
-        console.log("PLAY")
         this.tileMap = new Tilemap();
         let mapObject = mapData;
         console.log(mapObject)
@@ -68,7 +91,7 @@ export class Game {
      */
     gameLoop(delta: number) {
 
-        if(this.titleScreen && this.titleScreen.isShowing()) {
+        if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
         }
 

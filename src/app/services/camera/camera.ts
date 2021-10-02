@@ -1,7 +1,7 @@
 export class Camera {
 
-    public static zoom: number = 3.8;
-    public static speed: number = 5.0;
+    public static zoom: number = 1.5;
+    public static speed: number = 10.0;
     public static pos = {
         x: 0,
         y: 0
@@ -20,7 +20,7 @@ export class Camera {
     }
 
     static update(delta: number) {
-        Camera.pos.x += Camera.velocity.x * delta;
-        Camera.pos.y += Camera.velocity.y * delta;
+        Camera.pos.x += Camera.velocity.x / Camera.zoom * delta;
+        Camera.pos.y += Camera.velocity.y / Camera.zoom * delta;
     }
 }

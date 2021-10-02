@@ -52,8 +52,13 @@ export class PixiManager {
         //Create a Pixi Application
         let startParams: PIXI.IApplicationOptions = {
             backgroundColor: 0x000000,
+            antialias: false
         }
         this.app = new PIXI.Application(startParams);
+        
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
+        PIXI.settings.WRAP_MODE = PIXI.WRAP_MODES.CLAMP;
+        PIXI.settings.ROUND_PIXELS = true;
         
         //Add the pixi.js canvas to the HTML document
         document.body.appendChild(this.app.view);

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js"
 import { Texture } from "pixi.js";
-import * as overworld_tileset from '../../../assets/tilesets/Overworld.json'; // TODO remove
+import * as overworld_tileset from '../../../assets/tilesets/Tileset.json'; // TODO remove
 import { TilesetInterface } from "../../tileset";
 
 const ASSET_FOLDER_PATH = 'assets';

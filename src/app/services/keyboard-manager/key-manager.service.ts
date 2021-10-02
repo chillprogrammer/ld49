@@ -24,7 +24,7 @@ export class KeyManager {
     }
 
     static keyPressed(keyEvent: KeyboardEvent) {
-        let key = keyEvent.key;
+        let key = keyEvent.key.toLowerCase();
 
         if (!KeyManager.listOfKeys.includes(key)) {
             KeyManager.listOfKeys.push(key);
@@ -32,7 +32,7 @@ export class KeyManager {
     }
 
     static keyReleased(keyEvent: KeyboardEvent) {
-        let key = keyEvent.key;
+        let key = keyEvent.key.toLowerCase();;
         if (KeyManager.listOfKeys.includes(key)) {
             for (let i = 0; i < KeyManager.listOfKeys.length; ++i) {
                 if (KeyManager.listOfKeys[i] === key) {
