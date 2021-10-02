@@ -1,7 +1,7 @@
-import { Texture } from "@pixi/core";
+import { Filter, Texture } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { Sprite } from "@pixi/sprite";
-import { Application, Text } from 'pixi.js';
+import { Application, filters, Text } from 'pixi.js';
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
