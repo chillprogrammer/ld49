@@ -35,6 +35,8 @@ export class Player {
         this.init();
     }
 
+    getContainer(): Container { return this.playerContainer; }
+
     init() {
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
@@ -44,7 +46,7 @@ export class Player {
 
         this.playerContainer.x = PixiManager.INITIAL_WIDTH / 2;
         this.playerContainer.y = PixiManager.INITIAL_HEIGHT / 2;
-        this.playerContainer.scale.set(Camera.zoom * 3);
+        //this.playerContainer.scale.set(Camera.zoom * 3);
 
         //this.activeSprite = this.idleSpriteUpLeft;
     }
@@ -81,9 +83,12 @@ export class Player {
     }
 
     update(delta: number) {
-        this.position.x = PixiManager.INITIAL_WIDTH / 2 - Camera.pos.x / Camera.zoom + this.playerContainer.width;
-        this.position.y = PixiManager.INITIAL_HEIGHT / 2 - Camera.pos.y / Camera.zoom + this.playerContainer.height / 2;
-        this.playerContainer.x = this.position.x;
-        this.playerContainer.y = this.position.y;
+        
+
+        this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
+        this.position.x = Camera.pos.x + PixiManager.INITIAL_WIDTH / 2 ;
+        this.position.y = Camera.pos.y + PixiManager.INITIAL_HEIGHT  / 2 ;
+        
+        this.playerContainer.position.set(this.position.x - Camera.pos.x, this.position.y - Camera.pos.y);
     }
 }

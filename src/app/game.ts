@@ -62,7 +62,7 @@ export class Game {
      * Called from the App loader class.
      */
     private init() {
-        addEventListener('wheel', this.scrollFunction.bind(this));
+        //addEventListener('wheel', this.scrollFunction.bind(this));
 
 
         // Event Listeners
@@ -102,8 +102,8 @@ export class Game {
         }
 
         if (this.pixiManager.getContainer()) {
-            this.pixiManager.getContainer().scale.set(Camera.zoom, Camera.zoom);
-            this.pixiManager.getContainer().position.set(Camera.pos.x, Camera.pos.y);
+            //this.pixiManager.getContainer().scale.set(Camera.zoom, Camera.zoom);
+            //this.pixiManager.getContainer().position.set(Camera.pos.x, Camera.pos.y);
         }
 
         if (KeyManager.isKeyPressed('w')) {
@@ -125,13 +125,15 @@ export class Game {
 
         if (this.tileMap) {
             this.tileMap.update(delta);
+            this.tileMap.getContainer().scale.set(Camera.zoom, Camera.zoom);
+            this.tileMap.getContainer().position.set(Camera.pos.x, Camera.pos.y);
         }
 
         if (this.player) {
             this.player.update(delta);
         }
 
-        
+
         Camera.update(delta);
     }
 }
