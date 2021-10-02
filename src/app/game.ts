@@ -6,6 +6,7 @@ import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { Tilemap } from "./tilemap";
 import { WebService } from './services/web/web.service';
 import { UserProfile } from './services/user-profile/user-profile.service';
+import { Camera } from './services/camera/camera';
 const mapData = require('../assets/maps/map1.json')
 
 export class Game {
@@ -13,7 +14,6 @@ export class Game {
     // Services
     private pixiManager: PixiManager;
     private soundManager: SoundManager;
-    private keyboardManager: KeyManager;
     private webService: WebService;
     private userProfile: UserProfile;
 
@@ -24,7 +24,6 @@ export class Game {
     constructor() {
         this.pixiManager = getServiceByClass(PixiManager);
         this.soundManager = getServiceByClass(SoundManager);
-        this.keyboardManager = getServiceByClass(KeyManager);
         this.webService = getServiceByClass(WebService);
         this.userProfile = getServiceByClass(UserProfile);
 
@@ -38,7 +37,7 @@ export class Game {
     private init() {
 
         // Sets the game loop
-        this.pixiManager.setGameLoop(this.gameLoop);
+        this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
         // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
         this.tileMap = new Tilemap();
@@ -47,15 +46,6 @@ export class Game {
         console.log(mapObject)
         this.tileMap.loadLevel(mapObject);
         this.tileMap.showLevel();
-
-        /*this.webService.getMapById("testid-1").then((data: any) => {
-            let mapObject = JSON.parse(data.body.tiledmap);
-            console.log(mapObject)
-            this.tileMap.loadLevel(mapObject);
-            this.tileMap.showLevel();
-        });*/
-
-
     }
 
     /**
@@ -64,5 +54,29 @@ export class Game {
      */
     gameLoop(delta: number) {
 
+        if (KeyManager.isKeyPressed('w')) {
+            Camera.velocity.y = Camera.speed;
+        } else if (KeyManager.isKeyPressed('s')) {
+            Camera.velocity.y = -Camera.speed;
+        } else {
+            Camera.velocity.y = 0;
+        }
+
+        if (KeyManager.isKeyPressed('a')) {
+            Camera.velocity.x = Camera.speed;
+        }
+        else if (KeyManager.isKeyPressed('d')) {
+            Camera.velocity.x = -Camera.speed;
+        } else {
+            Camera.velocity.x = 0;
+        }
+
+
+
+        Camera.update(delta);
+
+        if (this.tileMap) {
+            this.tileMap.update(delta);
+        }
     }
 }
