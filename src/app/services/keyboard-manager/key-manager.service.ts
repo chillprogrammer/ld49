@@ -1,6 +1,6 @@
 export class KeyManager {
 
-    private listOfKeys: string[] = [];
+    private static listOfKeys: string[] = [];
 
     static KEYS = {
         W: 'w',
@@ -19,31 +19,34 @@ export class KeyManager {
     }
 
     private init() {
-        document.addEventListener('keydown', this.keyPressed.bind(this));
-        document.addEventListener('keyup', this.keyReleased.bind(this));
+        document.addEventListener('keydown', KeyManager.keyPressed);
+        document.addEventListener('keyup', KeyManager.keyReleased);
     }
 
-    keyPressed(keyEvent: KeyboardEvent) {
-        //onsole.log('Pressed: ' + keyEvent.key);
+    static keyPressed(keyEvent: KeyboardEvent) {
         let key = keyEvent.key;
+        console.log(key);
 
-        if (!this.listOfKeys.includes(key)) {
-            this.listOfKeys.push(key);
+        if (!KeyManager.listOfKeys.includes(key)) {
+            KeyManager.listOfKeys.push(key);
         }
     }
 
-    keyReleased(keyEvent: KeyboardEvent) {
-        //console.log('Released: ' + keyEvent.key);
+    static keyReleased(keyEvent: KeyboardEvent) {
         let key = keyEvent.key;
-        if (this.listOfKeys.includes(key)) {
-            for (let i = 0; i < this.listOfKeys.length; ++i) {
-                if (this.listOfKeys[i] === key) {
-                    this.listOfKeys.splice(i, 1);
+        if (KeyManager.listOfKeys.includes(key)) {
+            for (let i = 0; i < KeyManager.listOfKeys.length; ++i) {
+                if (KeyManager.listOfKeys[i] === key) {
+                    KeyManager.listOfKeys.splice(i, 1);
                     return;
                 }
             }
         }
     }
 
-    getKeyList() { return this.listOfKeys; }
+    static getKeyList() { return KeyManager.listOfKeys; }
+
+    static isKeyPressed(key: string): boolean {
+        return KeyManager.getKeyList().includes(key);
+    }
 }

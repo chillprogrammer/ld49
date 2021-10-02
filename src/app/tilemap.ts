@@ -5,6 +5,7 @@ import { TextureManager } from "./services/texture-manager/texture-manager.servi
 import * as test_map from '../assets/maps/map1.json'; // TODO remove
 import * as overworld_tileset from '../assets/tilesets/Overworld.json'; // TODO remove
 import { Tileset } from "./tileset";
+import { Camera } from "./services/camera/camera";
 
 interface TiledMapObject {
     compressionlevel: number,
@@ -131,6 +132,13 @@ export class Tilemap {
         if (this.visible) {
             this.visible = false;
             this.pixiManager.removeChild(this.tilemapContainer);
+        }
+    }
+
+    update(delta: number) {
+        if (this.tilemapContainer) {
+            this.tilemapContainer.scale.set(Camera.zoom, Camera.zoom);
+            this.tilemapContainer.position.set(Camera.pos.x, Camera.pos.y);
         }
     }
 
