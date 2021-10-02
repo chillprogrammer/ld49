@@ -50,16 +50,16 @@ export class Game {
 
         /*
             // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
-            this.tileMap = new Tilemap();
-            let mapObject = mapData;
-            console.log(mapObject)
-            this.tileMap.loadLevel(mapObject);
-            this.tileMap.showLevel();
         */
     }
 
     titleScreenPlayButtonClicked() {
         console.log("PLAY")
+        this.tileMap = new Tilemap();
+        let mapObject = mapData;
+        console.log(mapObject)
+        this.tileMap.loadLevel(mapObject);
+        this.tileMap.showLevel();
     }
 
     /**
