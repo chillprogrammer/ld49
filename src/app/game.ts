@@ -86,7 +86,7 @@ export class Game {
         this.tileMap.loadLevel(mapObject);
         this.tileMap.showLevel();
 
-        
+
         this.player = new Player(this.tileMap.getTileset());
     }
 
@@ -98,6 +98,12 @@ export class Game {
 
         if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
+            return;
+        }
+
+        if (this.pixiManager.getContainer()) {
+            this.pixiManager.getContainer().scale.set(Camera.zoom, Camera.zoom);
+            this.pixiManager.getContainer().position.set(Camera.pos.x, Camera.pos.y);
         }
 
         if (KeyManager.isKeyPressed('w')) {
@@ -117,10 +123,6 @@ export class Game {
             Camera.velocity.x = 0;
         }
 
-
-
-        Camera.update(delta);
-
         if (this.tileMap) {
             this.tileMap.update(delta);
         }
@@ -128,5 +130,8 @@ export class Game {
         if (this.player) {
             this.player.update(delta);
         }
+
+        
+        Camera.update(delta);
     }
 }

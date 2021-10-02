@@ -141,10 +141,7 @@ export class Tilemap {
     }
 
     update(delta: number) {
-        if (this.tilemapContainer) {
-            this.tilemapContainer.scale.set(Camera.zoom, Camera.zoom);
-            this.tilemapContainer.position.set(Camera.pos.x, Camera.pos.y);
-        }
+
     }
 
 }
