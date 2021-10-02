@@ -2,7 +2,6 @@ import { AnimatedSprite, Sprite, Container, TilingSprite } from "pixi.js";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
-import * as test_map from '../assets/maps/map1.json'; // TODO remove
 import * as overworld_tileset from '../assets/tilesets/Overworld.json'; // TODO remove
 import { Tileset } from "./tileset";
 import { Camera } from "./services/camera/camera";

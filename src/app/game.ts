@@ -7,6 +7,7 @@ import { Tilemap } from "./tilemap";
 import { WebService } from './services/web/web.service';
 import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
+import { TitleScreen } from './titlescreen';
 const mapData = require('../assets/maps/map1.json')
 
 export class Game {
@@ -19,6 +20,8 @@ export class Game {
 
     // Managers
     private tileMap: Tilemap = null;
+
+    private titleScreen: TitleScreen = null;
 
 
     constructor() {
@@ -36,12 +39,23 @@ export class Game {
      */
     private init() {
 
+        // Event Listeners
+        document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
+
         // Sets the game loop
         this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
-        // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
-        this.tileMap = new Tilemap();
+        this.titleScreen = new TitleScreen();
+        this.titleScreen.display();
 
+        /*
+            // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
+        */
+    }
+
+    titleScreenPlayButtonClicked() {
+        console.log("PLAY")
+        this.tileMap = new Tilemap();
         let mapObject = mapData;
         console.log(mapObject)
         this.tileMap.loadLevel(mapObject);
@@ -53,6 +67,10 @@ export class Game {
      * @param delta the delta time between each frame
      */
     gameLoop(delta: number) {
+
+        if(this.titleScreen && this.titleScreen.isShowing()) {
+            this.titleScreen.update(delta);
+        }
 
         if (KeyManager.isKeyPressed('w')) {
             Camera.velocity.y = Camera.speed;
