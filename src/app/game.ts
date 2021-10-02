@@ -105,18 +105,18 @@ export class Game {
             this.player.moveUp();
             this.player.direction &= ~DIRECTON.DOWN;
             this.player.direction |= DIRECTON.UP
-            if(!Camera.velocity.x) {
+            /*if(!Camera.velocity.x) {
                 this.player.direction &= ~DIRECTON.LEFT;
                 this.player.direction &= ~DIRECTON.RIGHT;
-            }
+            }*/
         } else if (KeyManager.isKeyPressed('s')) {
             this.player.moveDown();
             this.player.direction |= DIRECTON.DOWN;
             this.player.direction &= ~DIRECTON.UP;
-            if(!Camera.velocity.x) {
+            /*if(!Camera.velocity.x) {
                 this.player.direction &= ~DIRECTON.LEFT;
                 this.player.direction &= ~DIRECTON.RIGHT;
-            }
+            }*/
         } else {
             Camera.velocity.y = 0;
         }
@@ -124,34 +124,21 @@ export class Game {
             this.player.moveLeft();
             this.player.direction &= ~DIRECTON.RIGHT;
             this.player.direction |= DIRECTON.LEFT;
-            if(!Camera.velocity.y) {
+            /*if(!Camera.velocity.y) {
                 this.player.direction &= ~DIRECTON.UP;
                 this.player.direction &= ~DIRECTON.DOWN;
-            }
+            }*/
         }
         else if (KeyManager.isKeyPressed('d')) {
             this.player.moveRight();
             this.player.direction |= DIRECTON.RIGHT;
             this.player.direction &= ~DIRECTON.LEFT;
-            if(!Camera.velocity.y) {
+            /*if(!Camera.velocity.y) {
                 this.player.direction &= ~DIRECTON.UP;
                 this.player.direction &= ~DIRECTON.DOWN;
-            }
+            }*/
         } else {
             Camera.velocity.x = 0;
-        }
-
-        if (this.player.direction & DIRECTON.UP) {
-            console.log("Player Up")
-        }
-        if (this.player.direction & DIRECTON.DOWN) {
-            console.log("Player Down")
-        }
-        if (this.player.direction & DIRECTON.LEFT) {
-            console.log("Player Left")
-        }
-        if (this.player.direction & DIRECTON.RIGHT) {
-            console.log("Player Right")
         }
 
         if (this.tileMap) {

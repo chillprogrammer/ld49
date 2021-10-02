@@ -1,7 +1,7 @@
 export class Camera {
 
     public static zoom: number = 1.52;
-    public static speed: number = 2.0;
+    public static speed: number = 3.0;
     public static pos = {
         x: 0,
         y: 0
