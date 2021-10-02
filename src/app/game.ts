@@ -8,7 +8,7 @@ import { WebService } from './services/web/web.service';
 import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
-import { Player } from './player';
+import { DIRECTON, Player } from './player';
 const mapData = require('../assets/maps/map1.json')
 
 export class Game {
@@ -101,25 +101,57 @@ export class Game {
             return;
         }
 
-        if (this.pixiManager.getContainer()) {
-            //this.pixiManager.getContainer().scale.set(Camera.zoom, Camera.zoom);
-            //this.pixiManager.getContainer().position.set(Camera.pos.x, Camera.pos.y);
-        }
-
         if (KeyManager.isKeyPressed('w')) {
             this.player.moveUp();
+            this.player.direction &= ~DIRECTON.DOWN;
+            this.player.direction |= DIRECTON.UP
+            if(!Camera.velocity.x) {
+                this.player.direction &= ~DIRECTON.LEFT;
+                this.player.direction &= ~DIRECTON.RIGHT;
+            }
         } else if (KeyManager.isKeyPressed('s')) {
             this.player.moveDown();
+            this.player.direction |= DIRECTON.DOWN;
+            this.player.direction &= ~DIRECTON.UP;
+            if(!Camera.velocity.x) {
+                this.player.direction &= ~DIRECTON.LEFT;
+                this.player.direction &= ~DIRECTON.RIGHT;
+            }
         } else {
             Camera.velocity.y = 0;
         }
         if (KeyManager.isKeyPressed('a')) {
             this.player.moveLeft();
+            this.player.direction &= ~DIRECTON.RIGHT;
+            this.player.direction |= DIRECTON.LEFT;
+            if(!Camera.velocity.y) {
+                this.player.direction &= ~DIRECTON.UP;
+                this.player.direction &= ~DIRECTON.DOWN;
+            }
         }
         else if (KeyManager.isKeyPressed('d')) {
             this.player.moveRight();
+            this.player.direction |= DIRECTON.RIGHT;
+            this.player.direction &= ~DIRECTON.LEFT;
+            if(!Camera.velocity.y) {
+                this.player.direction &= ~DIRECTON.UP;
+                this.player.direction &= ~DIRECTON.DOWN;
+            }
         } else {
             Camera.velocity.x = 0;
+        }
+
+        if (this.player.direction & DIRECTON.UP) {
+            console.log("Player Up")
+        }
+        if (this.player.direction & DIRECTON.DOWN) {
+            console.log("Player Down")
+        }
+        if (this.player.direction & DIRECTON.LEFT) {
+            console.log("Player Left")
+        }
+        if (this.player.direction & DIRECTON.RIGHT) {
+            console.log("Player Right")
         }
 
         if (this.tileMap) {

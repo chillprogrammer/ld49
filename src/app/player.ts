@@ -7,10 +7,20 @@ import { TextureManager } from "./services/texture-manager/texture-manager.servi
 import { Tileset } from "./tileset";
 
 export enum ANIMATION_FRAMES {
-    IDLE_UP_LEFT = 0,
-    IDLE_UP_RIGHT = 1,
-    IDLE_DOWN_LEFT = 2,
-    IDLE_DOWN_RIGHT = 3
+    IDLE_UP_LEFT = 0x00,
+    IDLE_UP_RIGHT = 0x01,
+    IDLE_DOWN_LEFT = 0x02,
+    IDLE_DOWN_RIGHT = 0x03,
+
+    RUN_LEFT = 0x04,
+    RUN_RIGHT = 0x05
+};
+
+export enum DIRECTON {
+    UP = 1,
+    DOWN = 2,
+    LEFT = 4,
+    RIGHT = 8
 };
 
 export class Player {
@@ -20,13 +30,18 @@ export class Player {
         y: 0
     };
 
-    private activeSprite: AnimatedSprite = null;
+    public direction = 0x00000000;
 
     // IDLE Sprites
     private idleSpriteUpLeft: AnimatedSprite[] = [];
     private idleSpriteUpRight: AnimatedSprite[] = [];
     private idleSpriteDownLeft: AnimatedSprite[] = [];
     private idleSpriteDownRight: AnimatedSprite[] = [];
+
+    // RUNNING Sprites
+    private runSpriteLeft: AnimatedSprite[] = [];
+    private runSpriteRight: AnimatedSprite[] = [];
+
 
     // Services
     private textureManager: TextureManager = null;
@@ -50,12 +65,10 @@ export class Player {
 
         this.loadSprites();
         this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_LEFT);
+        this.setPlayerAnimation(2);
 
         this.playerContainer.x = PixiManager.INITIAL_WIDTH / 2;
         this.playerContainer.y = PixiManager.INITIAL_HEIGHT / 2;
-        //this.playerContainer.scale.set(Camera.zoom * 3);
-
-        //this.activeSprite = this.idleSpriteUpLeft;
     }
 
     setPlayerAnimation(animationEvent: number) {
@@ -69,21 +82,33 @@ export class Player {
                 break;
 
             case ANIMATION_FRAMES.IDLE_UP_RIGHT:
-                for (let i = 0; i < this.idleSpriteUpLeft.length; ++i) {
+                for (let i = 0; i < this.idleSpriteUpRight.length; ++i) {
                     this.playerContainer.addChild(this.idleSpriteUpRight[i]);
                 }
                 break;
 
             case ANIMATION_FRAMES.IDLE_DOWN_LEFT:
-                for (let i = 0; i < this.idleSpriteUpLeft.length; ++i) {
+                for (let i = 0; i < this.idleSpriteDownLeft.length; ++i) {
                     this.playerContainer.addChild(this.idleSpriteDownLeft[i]);
                 }
                 break;
 
 
             case ANIMATION_FRAMES.IDLE_DOWN_RIGHT:
-                for (let i = 0; i < this.idleSpriteUpLeft.length; ++i) {
+                for (let i = 0; i < this.idleSpriteDownRight.length; ++i) {
                     this.playerContainer.addChild(this.idleSpriteDownRight[i]);
+                }
+                break;
+
+            case ANIMATION_FRAMES.RUN_LEFT:
+                for (let i = 0; i < this.runSpriteLeft.length; ++i) {
+                    this.playerContainer.addChild(this.runSpriteLeft[i]);
+                }
+                break;
+
+            case ANIMATION_FRAMES.RUN_RIGHT:
+                for (let i = 0; i < this.runSpriteRight.length; ++i) {
+                    this.playerContainer.addChild(this.runSpriteRight[i]);
                 }
                 break;
 
@@ -100,7 +125,7 @@ export class Player {
     }
     moveLeft() {
         Camera.velocity.x = Camera.speed;
-        this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_LEFT);
+        this.setPlayerAnimation(ANIMATION_FRAMES.RUN_LEFT);
     }
     moveRight() {
         Camera.velocity.x = -Camera.speed;
@@ -154,6 +179,17 @@ export class Player {
         this.idleSpriteDownRight[2].y = this.idleSpriteDownRight[2].y + this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteDownRight[3].x = this.idleSpriteDownRight[3].x + this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteDownRight[3].y = this.idleSpriteDownRight[3].y + this.tileset.getTilesetInterface().tileheight;
+
+        // RUN LEFT
+        this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(770));
+        this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(771));
+        this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(802));
+        this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(803));
+        this.runSpriteLeft[0].x = this.runSpriteLeft[0].x
+        this.runSpriteLeft[1].x = this.runSpriteLeft[1].x + this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteLeft[2].y = this.runSpriteLeft[2].y + this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteLeft[3].x = this.runSpriteLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteLeft[3].y = this.runSpriteLeft[3].y + this.tileset.getTilesetInterface().tileheight;
     }
 
     update(delta: number) {
