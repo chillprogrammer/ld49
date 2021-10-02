@@ -26,8 +26,9 @@ export class PixiManager {
         this.app.stage.addChild(this.container);
     }
 
-    getApp(): PIXI.Application { return this.app }
-
+    getApp(): PIXI.Application { return this.app; }
+    getContainer(): Container { return this.container; }
+    
     addChild(child: any) {
         this.container.addChild(child);
     }
@@ -55,11 +56,11 @@ export class PixiManager {
             antialias: false
         }
         this.app = new PIXI.Application(startParams);
-        
+
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
         PIXI.settings.WRAP_MODE = PIXI.WRAP_MODES.CLAMP;
         PIXI.settings.ROUND_PIXELS = true;
-        
+
         //Add the pixi.js canvas to the HTML document
         document.body.appendChild(this.app.view);
 

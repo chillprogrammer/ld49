@@ -8,7 +8,7 @@ import { WebService } from './services/web/web.service';
 import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
-import { Player } from './player';
+import { DIRECTON, Player } from './player';
 const mapData = require('../assets/maps/map1.json')
 
 export class Game {
@@ -62,7 +62,7 @@ export class Game {
      * Called from the App loader class.
      */
     private init() {
-        addEventListener('wheel', this.scrollFunction.bind(this));
+        //addEventListener('wheel', this.scrollFunction.bind(this));
 
 
         // Event Listeners
@@ -86,7 +86,7 @@ export class Game {
         this.tileMap.loadLevel(mapObject);
         this.tileMap.showLevel();
 
-        
+
         this.player = new Player(this.tileMap.getTileset());
     }
 
@@ -98,35 +98,60 @@ export class Game {
 
         if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
+            return;
         }
 
         if (KeyManager.isKeyPressed('w')) {
-            Camera.velocity.y = Camera.speed;
+            this.player.moveUp();
+            this.player.direction &= ~DIRECTON.DOWN;
+            this.player.direction |= DIRECTON.UP
+            /*if(!Camera.velocity.x) {
+                this.player.direction &= ~DIRECTON.LEFT;
+                this.player.direction &= ~DIRECTON.RIGHT;
+            }*/
         } else if (KeyManager.isKeyPressed('s')) {
-            Camera.velocity.y = -Camera.speed;
+            this.player.moveDown();
+            this.player.direction |= DIRECTON.DOWN;
+            this.player.direction &= ~DIRECTON.UP;
+            /*if(!Camera.velocity.x) {
+                this.player.direction &= ~DIRECTON.LEFT;
+                this.player.direction &= ~DIRECTON.RIGHT;
+            }*/
         } else {
             Camera.velocity.y = 0;
         }
-
         if (KeyManager.isKeyPressed('a')) {
-            Camera.velocity.x = Camera.speed;
+            this.player.moveLeft();
+            this.player.direction &= ~DIRECTON.RIGHT;
+            this.player.direction |= DIRECTON.LEFT;
+            /*if(!Camera.velocity.y) {
+                this.player.direction &= ~DIRECTON.UP;
+                this.player.direction &= ~DIRECTON.DOWN;
+            }*/
         }
         else if (KeyManager.isKeyPressed('d')) {
-            Camera.velocity.x = -Camera.speed;
+            this.player.moveRight();
+            this.player.direction |= DIRECTON.RIGHT;
+            this.player.direction &= ~DIRECTON.LEFT;
+            /*if(!Camera.velocity.y) {
+                this.player.direction &= ~DIRECTON.UP;
+                this.player.direction &= ~DIRECTON.DOWN;
+            }*/
         } else {
             Camera.velocity.x = 0;
         }
 
-
-
-        Camera.update(delta);
-
         if (this.tileMap) {
             this.tileMap.update(delta);
+            this.tileMap.getContainer().scale.set(Camera.zoom, Camera.zoom);
+            this.tileMap.getContainer().position.set(Camera.pos.x, Camera.pos.y);
         }
 
         if (this.player) {
             this.player.update(delta);
         }
+
+
+        Camera.update(delta);
     }
 }

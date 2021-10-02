@@ -73,16 +73,16 @@ export class Tilemap {
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
         this.tilemapContainer = new Container();
-        this.tilemapContainer.scale.set(3, 3);
+        //this.tilemapContainer.scale.set(3, 3);
 
         // TODO make dynamic to use webservice
         this.tileset = new Tileset();
         this.tileset.loadTileset(overworld_tileset as any)
     }
 
-    getTileset(): Tileset {
-        return this.tileset;
-    }
+    getTileset(): Tileset { return this.tileset; }
+
+    getContainer(): Container { return this.tilemapContainer; }
 
     /**
      * Cleans up the enire stored TileMap array & sprites inside.
@@ -141,10 +141,7 @@ export class Tilemap {
     }
 
     update(delta: number) {
-        if (this.tilemapContainer) {
-            this.tilemapContainer.scale.set(Camera.zoom, Camera.zoom);
-            this.tilemapContainer.position.set(Camera.pos.x, Camera.pos.y);
-        }
+
     }
 
 }
