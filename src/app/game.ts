@@ -107,18 +107,17 @@ export class Game {
         }
 
         if (KeyManager.isKeyPressed('w')) {
-            Camera.velocity.y = Camera.speed;
+            this.player.moveUp();
         } else if (KeyManager.isKeyPressed('s')) {
-            Camera.velocity.y = -Camera.speed;
+            this.player.moveDown();
         } else {
             Camera.velocity.y = 0;
         }
-
         if (KeyManager.isKeyPressed('a')) {
-            Camera.velocity.x = Camera.speed;
+            this.player.moveLeft();
         }
         else if (KeyManager.isKeyPressed('d')) {
-            Camera.velocity.x = -Camera.speed;
+            this.player.moveRight();
         } else {
             Camera.velocity.x = 0;
         }
