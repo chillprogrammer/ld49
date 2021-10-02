@@ -25,7 +25,6 @@ export class KeyManager {
 
     static keyPressed(keyEvent: KeyboardEvent) {
         let key = keyEvent.key;
-        console.log(key);
 
         if (!KeyManager.listOfKeys.includes(key)) {
             KeyManager.listOfKeys.push(key);
