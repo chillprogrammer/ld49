@@ -100,7 +100,6 @@ export class Player {
                 }
                 break;
 
-
             case ANIMATION_FRAMES.IDLE_DOWN_RIGHT:
                 for (let i = 0; i < this.idleSpriteDownRight.length; ++i) {
                     this.playerContainer.addChild(this.idleSpriteDownRight[i]);
@@ -118,7 +117,6 @@ export class Player {
                     this.playerContainer.addChild(this.runSpriteRight[i]);
                 }
                 break;
-
 
             case ANIMATION_FRAMES.RUN_UP_LEFT:
                 for (let i = 0; i < this.runSpriteUpLeft.length; ++i) {
