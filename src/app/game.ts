@@ -59,7 +59,7 @@ export class Game {
     }
 
     titleScreenPlayButtonClicked() {
-
+        console.log("PLAY")
     }
 
     /**
@@ -67,6 +67,10 @@ export class Game {
      * @param delta the delta time between each frame
      */
     gameLoop(delta: number) {
+
+        if(this.titleScreen && this.titleScreen.isShowing()) {
+            this.titleScreen.update(delta);
+        }
 
         if (KeyManager.isKeyPressed('w')) {
             Camera.velocity.y = Camera.speed;

@@ -26,7 +26,7 @@ export class PixiManager {
         this.app.stage.addChild(this.container);
     }
 
-    //getApp(): PIXI.Application { return this.app }
+    getApp(): PIXI.Application { return this.app }
 
     addChild(child: any) {
         this.container.addChild(child);
