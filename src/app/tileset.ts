@@ -40,8 +40,17 @@ export class Tileset {
                 let animationTileId = animation.tileid ? animation.tileid+1 : 1;
                 textureListForTile.push(this.textureManager.getTextureFromTileset(this.tileset.image, animationTileId));
             });
-            const animatedSprite = new AnimatedSprite(textureListForTile, false);
-            animatedSprite.animationSpeed = animationTileDuration;
+
+            let textureArray: any = [];
+            textureListForTile.forEach(element => {
+                textureArray.push({
+                    texture: element,
+                    time: animationTileDuration
+                })
+            });
+            
+            const animatedSprite = new AnimatedSprite(textureArray, true);
+            animatedSprite.animationSpeed = 1;
             animatedSprite.loop = true;
             animatedSprite.play();
             return animatedSprite
