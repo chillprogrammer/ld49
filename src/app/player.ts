@@ -5,7 +5,7 @@ import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
-
+import * as PIXI from 'pixi.js'; 
 export class Player {
 
     private activeSprite: AnimatedSprite = null;
@@ -73,9 +73,22 @@ export class Player {
         this.idleSpriteUpLeft[2].y = this.idleSpriteUpLeft[2].y + this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteUpLeft[3].x = this.idleSpriteUpLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteUpLeft[3].y = this.idleSpriteUpLeft[3].y + this.tileset.getTilesetInterface().tileheight;
+        const app = new PIXI.Application();
+
+    // Draw a green rectangle
+    const rect = new PIXI.Graphics()
+     .beginFill(0x00ff00)
+     .drawRect(40, 40, 200, 200);
+
+    // Add a blur filter
+    rect.filters = [new PIXI.filters.BlurFilter()];
+
+    // Display rectangle
+    app.stage.addChild(rect);
+    document.body.appendChild(app.view);
     }
 
     update(delta: number) {
-
+        
     }
 }

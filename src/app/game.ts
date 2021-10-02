@@ -96,6 +96,8 @@ export class Game {
      */
     gameLoop(delta: number) {
 
+        
+
         if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
         }
