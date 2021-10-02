@@ -8,6 +8,7 @@ import { WebService } from './services/web/web.service';
 import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
+import { Player } from './player';
 const mapData = require('../assets/maps/map1.json')
 
 export class Game {
@@ -22,6 +23,7 @@ export class Game {
     private tileMap: Tilemap = null;
 
     private titleScreen: TitleScreen = null;
+    private player: Player = null;
 
 
     constructor() {
@@ -83,6 +85,9 @@ export class Game {
         console.log(mapObject)
         this.tileMap.loadLevel(mapObject);
         this.tileMap.showLevel();
+
+        
+        this.player = new Player(this.tileMap.getTileset());
     }
 
     /**
@@ -118,6 +123,10 @@ export class Game {
 
         if (this.tileMap) {
             this.tileMap.update(delta);
+        }
+
+        if (this.player) {
+            this.player.update(delta);
         }
     }
 }

@@ -30,7 +30,7 @@ export class Tileset {
         return this.tileset;
     }
 
-    getSpriteForTile(tileId: number): Sprite {
+    getSpriteForTile(tileId: number): Sprite | AnimatedSprite {
         // For animated tiles only, we need to return an AnimatedSprite() with multiple textures.
         let animatedTiles = this.getAnimationsForTile(tileId);
         if (animatedTiles.length > 0) {
@@ -40,8 +40,17 @@ export class Tileset {
                 let animationTileId = animation.tileid ? animation.tileid+1 : 1;
                 textureListForTile.push(this.textureManager.getTextureFromTileset(this.tileset.image, animationTileId));
             });
-            const animatedSprite = new AnimatedSprite(textureListForTile, false);
-            animatedSprite.animationSpeed = animationTileDuration;
+
+            let textureArray: any = [];
+            textureListForTile.forEach(element => {
+                textureArray.push({
+                    texture: element,
+                    time: animationTileDuration
+                })
+            });
+            
+            const animatedSprite = new AnimatedSprite(textureArray, true);
+            animatedSprite.animationSpeed = 1;
             animatedSprite.loop = true;
             animatedSprite.play();
             return animatedSprite

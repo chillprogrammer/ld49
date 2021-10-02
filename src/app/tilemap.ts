@@ -60,11 +60,10 @@ export class Tilemap {
     // TileMap Objects
     private tilemapContainer: Container = null;
     private tileMap: TiledMapObject = null;
+    private tileset: Tileset = null;
 
     // Utility Variables
     private visible: boolean = false;
-
-    private overworldTileset: Tileset = null;
 
     constructor() {
         this.init();
@@ -77,8 +76,12 @@ export class Tilemap {
         this.tilemapContainer.scale.set(3, 3);
 
         // TODO make dynamic to use webservice
-        this.overworldTileset = new Tileset();
-        this.overworldTileset.loadTileset(overworld_tileset as any)
+        this.tileset = new Tileset();
+        this.tileset.loadTileset(overworld_tileset as any)
+    }
+
+    getTileset(): Tileset {
+        return this.tileset;
     }
 
     /**
@@ -100,7 +103,7 @@ export class Tilemap {
      */
     loadLevel(map: TiledMapObject) {
         if (map) {
-            this.textureManager.loadTileSetIntoMemory(this.overworldTileset.getTilesetInterface() as any);
+            this.textureManager.loadTileSetIntoMemory(this.tileset.getTilesetInterface() as any);
             this.tileMap = map;
             this.pixiManager.getApp().renderer.backgroundColor = parseInt(this.tileMap.backgroundcolor.replace('#', '0x'));
             for (let i = 0; i < this.tileMap.layers.length; ++i) {
@@ -113,7 +116,7 @@ export class Tilemap {
                             row++;
                         }
                         let tileId = layer.data[j];
-                        let tileSprite = this.overworldTileset.getSpriteForTile(tileId);
+                        let tileSprite = this.tileset.getSpriteForTile(tileId);
                         tileSprite.x = (j % LAYER_WIDTH) * map.tilewidth;
                         tileSprite.y = row * map.tileheight;
                         this.tilemapContainer.addChild(tileSprite);
