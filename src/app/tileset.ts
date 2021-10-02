@@ -30,7 +30,7 @@ export class Tileset {
         return this.tileset;
     }
 
-    getSpriteForTile(tileId: number): Sprite {
+    getSpriteForTile(tileId: number): Sprite | AnimatedSprite {
         // For animated tiles only, we need to return an AnimatedSprite() with multiple textures.
         let animatedTiles = this.getAnimationsForTile(tileId);
         if (animatedTiles.length > 0) {
