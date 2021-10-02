@@ -39,18 +39,20 @@ export class Game {
         const MIN_ZOOM = 0.5;
         if (e.deltaY < 0) {
             if (Camera.zoom < MAX_ZOOM) {
-                Camera.zoom += 0.5;
+                Camera.zoom += 0.01;
             } else {
                 Camera.zoom = MAX_ZOOM;
             }
         }
         else {
             if (Camera.zoom > MIN_ZOOM) {
-                Camera.zoom -= 0.5;
+                Camera.zoom -= 0.01;
             } else {
                 Camera.zoom = MIN_ZOOM
             }
         }
+
+        console.log(Camera.zoom);
     };
 
     /**
