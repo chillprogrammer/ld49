@@ -6,6 +6,7 @@ import * as overworld_tileset from '../assets/tilesets/Tileset.json'; // TODO re
 import { Tileset } from "./tileset";
 import { Camera } from "./services/camera/camera";
 import * as PIXI from "pixi.js";
+import { Player } from "./player";
 
 interface TiledMapObject {
     backgroundcolor: string,
@@ -59,6 +60,7 @@ export class Tilemap {
 
     // TileMap Objects
     private tilemapContainer: Container = null;
+    private tileIDList: number[] = [];
     private tileMap: TiledMapObject = null;
     private tileset: Tileset = null;
 
@@ -120,6 +122,7 @@ export class Tilemap {
                         tileSprite.x = (j % LAYER_WIDTH) * map.tilewidth;
                         tileSprite.y = row * map.tileheight;
                         this.tilemapContainer.addChild(tileSprite);
+                        this.tileIDList.push(tileId);
                     }
                 }
             }
@@ -140,8 +143,23 @@ export class Tilemap {
         }
     }
 
-    update(delta: number) {
-
+    update(delta: number, player?: Player) {
+        if (player) {
+            let collision = false;
+            for (let i = 0; i < this.tilemapContainer.children.length; ++i) {
+                let tile: Sprite = <Sprite>(this.tilemapContainer.children[i]);
+                let tileID: number = this.tileIDList[i];
+                if (PixiManager.boxCollision(player.getContainer(), <Sprite>tile)) {
+                    //tile.tint=0xff0000;
+                    if (tileID != 0) {
+                        collision = true;
+                    }
+                }
+            }
+            if (!collision) {
+                player.dead();
+            }
+        }
     }
 
 }
