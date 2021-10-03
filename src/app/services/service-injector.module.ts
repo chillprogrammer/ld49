@@ -4,9 +4,10 @@ import { PixiManager } from './pixi-manager/pixi-manager.service';
 import { KeyManager } from './keyboard-manager/key-manager.service';
 import { WebService } from './web/web.service';
 import { UserProfile } from './user-profile/user-profile.service';
+import { LevelManager } from './level-manager/level-manager';
 
 // To add a new class as a service, simply add the class name to this list.
-const imports = [TextureManager, SoundManager, PixiManager, KeyManager, WebService, UserProfile];
+const imports = [TextureManager, SoundManager, PixiManager, KeyManager, WebService, UserProfile, LevelManager];
 // To access the service from another file, call 'getServiceByClass(CLASS_NAME)'
 
 
