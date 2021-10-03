@@ -23,7 +23,7 @@ export class TitleScreen {
 
     private TITLE_COLOR: number = 0xFFD700;
     private BUTTON_COLOR_HOVER: number = 0xFF0000;
-    private BUTTON_COLOR: number = 0x000000;
+    private BUTTON_COLOR: number = 0x111111;
 
 
     constructor() {
@@ -42,8 +42,9 @@ export class TitleScreen {
 
         this.playButton = Sprite.from(Texture.WHITE);
         this.playButton.tint = this.BUTTON_COLOR;
+        this.playButton.alpha = 0.5
         this.playButton.scale.set(PixiManager.INITIAL_WIDTH / 42, 5);
-        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width / 2, PixiManager.INITIAL_HEIGHT / 1.5);
+        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width + 35, PixiManager.INITIAL_HEIGHT / 1.3);
         (<any>this.playButton).interactive = true;
         this.container.addChild(this.playButton);
 

@@ -161,13 +161,8 @@ export class Tilemap {
             if (!collision) {
                 player.dead();
                 let pixelFilter = new PixelateFilter();
-                pixelFilter.size = 0.5
-               /* shockwaveFilter.time = 0;
-                shockwaveFilter.amplitude = 30;
-                shockwaveFilter.wavelength = 160;
-                shockwaveFilter.radius = -1;
-                shockwaveFilter.speed = 0.0001;
-                */this.tilemapContainer.filters = [pixelFilter];
+                pixelFilter.size = 0.5;
+                this.tilemapContainer.filters = [pixelFilter];
             }
         }
     }
