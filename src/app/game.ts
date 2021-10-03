@@ -141,6 +141,14 @@ export class Game {
             Camera.velocity.x = 0;
         }
 
+        if (KeyManager.isKeyPressed(' ')) {
+            this.player.jump();
+        } else {
+            if (!this.player.currentlyJumping) {
+                this.player.jumpAvailable = true;
+            }
+        }
+
         if (this.tileMap) {
             this.tileMap.update(delta);
             this.tileMap.getContainer().scale.set(Camera.zoom, Camera.zoom);
