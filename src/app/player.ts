@@ -1,6 +1,7 @@
 import { Filter } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { GlitchFilter } from "@pixi/filter-glitch";
+import { PixelateFilter } from "@pixi/filter-pixelate";
 import { ShockwaveFilter } from "@pixi/filter-shockwave";
 import { TwistFilter } from "@pixi/filter-twist";
 import { AnimatedSprite } from "@pixi/sprite-animated";
@@ -41,7 +42,8 @@ export class Player {
     public jumpAvailable = true;
     public currentlyJumping = false;
     private JUMP_DISTANCE: number = 200;
-    private glitchFilter: ShockwaveFilter;
+    private glitchFilter: PixelateFilter;
+    private shockwaveFilter: ShockwaveFilter;
 
     public position = {
         x: 0,
@@ -106,9 +108,8 @@ export class Player {
     }
 
     loadFilters() {
-        this.glitchFilter = new ShockwaveFilter()
-        this.glitchFilter.time = 0;
-
+        this.glitchFilter = new PixelateFilter();
+        this.shockwaveFilter = new ShockwaveFilter();
     }
 
     setPlayerAnimation(animationEvent: number) {
@@ -237,7 +238,7 @@ export class Player {
     dead() {
         this.alive = false;
         console.log("DEAD")
-       // this.playerContainer.filters = [this.glitchFilter]
+       this.playerContainer.filters = [this.glitchFilter];
     }
 
     loadSprites(): void {
@@ -408,7 +409,6 @@ export class Player {
     }
 
     update(delta: number) {
-
         if (!this.currentlyJumping) {
             if (!Camera.velocity.x && !Camera.velocity.y) {
                 // IDLE Animations
@@ -454,6 +454,11 @@ export class Player {
                     }
                 }
             }
+        }
+
+        if(!this.alive) {
+            this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
+            return;
         }
 
         this.position.x = Camera.pos.x + PixiManager.INITIAL_WIDTH / 2;

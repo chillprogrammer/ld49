@@ -99,52 +99,56 @@ export class Game {
             return;
         }
 
-        if (KeyManager.isKeyPressed('w')) {
-            this.player.moveUp();
-            this.player.direction &= ~DIRECTON.DOWN;
-            this.player.direction |= DIRECTON.UP
-            /*if(!Camera.velocity.x) {
-                this.player.direction &= ~DIRECTON.LEFT;
-                this.player.direction &= ~DIRECTON.RIGHT;
-            }*/
-        } else if (KeyManager.isKeyPressed('s')) {
-            this.player.moveDown();
-            this.player.direction |= DIRECTON.DOWN;
-            this.player.direction &= ~DIRECTON.UP;
-            /*if(!Camera.velocity.x) {
-                this.player.direction &= ~DIRECTON.LEFT;
-                this.player.direction &= ~DIRECTON.RIGHT;
-            }*/
-        } else {
-            Camera.velocity.y = 0;
-        }
-        if (KeyManager.isKeyPressed('a')) {
-            this.player.moveLeft();
-            this.player.direction &= ~DIRECTON.RIGHT;
-            this.player.direction |= DIRECTON.LEFT;
-            /*if(!Camera.velocity.y) {
-                this.player.direction &= ~DIRECTON.UP;
+        if (this.player.alive) {
+            if (KeyManager.isKeyPressed('w')) {
+                this.player.moveUp();
                 this.player.direction &= ~DIRECTON.DOWN;
-            }*/
-        }
-        else if (KeyManager.isKeyPressed('d')) {
-            this.player.moveRight();
-            this.player.direction |= DIRECTON.RIGHT;
-            this.player.direction &= ~DIRECTON.LEFT;
-            /*if(!Camera.velocity.y) {
+                this.player.direction |= DIRECTON.UP
+                /*if(!Camera.velocity.x) {
+                    this.player.direction &= ~DIRECTON.LEFT;
+                    this.player.direction &= ~DIRECTON.RIGHT;
+                }*/
+            } else if (KeyManager.isKeyPressed('s')) {
+                this.player.moveDown();
+                this.player.direction |= DIRECTON.DOWN;
                 this.player.direction &= ~DIRECTON.UP;
-                this.player.direction &= ~DIRECTON.DOWN;
-            }*/
-        } else {
-            Camera.velocity.x = 0;
-        }
-
-        if (KeyManager.isKeyPressed(' ')) {
-            this.player.jump();
-        } else {
-            if (!this.player.currentlyJumping) {
-                this.player.jumpAvailable = true;
+                /*if(!Camera.velocity.x) {
+                    this.player.direction &= ~DIRECTON.LEFT;
+                    this.player.direction &= ~DIRECTON.RIGHT;
+                }*/
+            } else {
+                Camera.velocity.y = 0;
             }
+            if (KeyManager.isKeyPressed('a')) {
+                this.player.moveLeft();
+                this.player.direction &= ~DIRECTON.RIGHT;
+                this.player.direction |= DIRECTON.LEFT;
+                /*if(!Camera.velocity.y) {
+                    this.player.direction &= ~DIRECTON.UP;
+                    this.player.direction &= ~DIRECTON.DOWN;
+                }*/
+            }
+            else if (KeyManager.isKeyPressed('d')) {
+                this.player.moveRight();
+                this.player.direction |= DIRECTON.RIGHT;
+                this.player.direction &= ~DIRECTON.LEFT;
+                /*if(!Camera.velocity.y) {
+                    this.player.direction &= ~DIRECTON.UP;
+                    this.player.direction &= ~DIRECTON.DOWN;
+                }*/
+            } else {
+                Camera.velocity.x = 0;
+            }
+
+            if (KeyManager.isKeyPressed(' ')) {
+                this.player.jump();
+            } else {
+                if (!this.player.currentlyJumping) {
+                    this.player.jumpAvailable = true;
+                }
+            }
+        } else {
+            Camera.velocity.x = Camera.velocity.y = 0;
         }
 
         if (this.tileMap) {
