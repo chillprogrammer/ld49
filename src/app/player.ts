@@ -15,7 +15,9 @@ export enum ANIMATION_FRAMES {
     RUN_LEFT,
     RUN_UP_LEFT,
     RUN_RIGHT,
-    RUN_UP_RIGHT
+    RUN_UP_RIGHT,
+
+    JUMP_LEFT
 };
 
 export enum DIRECTON {
@@ -26,6 +28,10 @@ export enum DIRECTON {
 };
 
 export class Player {
+
+    public jumpAvailable = true;
+    private currentlyJumping = false;
+    private JUMP_DISTANCE: number = 200;
 
     public position = {
         x: 0,
@@ -50,6 +56,10 @@ export class Player {
     private runSpriteRight: AnimatedSprite[] = [];
     private runSpriteUpRight: AnimatedSprite[] = [];
 
+    // SPECIAL Sprites
+    private jumpLeft: AnimatedSprite[] = [];
+    private jumpRight: AnimatedSprite[] = [];
+
 
     // Services
     private textureManager: TextureManager = null;
@@ -58,6 +68,7 @@ export class Player {
     private tileset: Tileset = null;
 
     private playerContainer: Container = null;
+    private playerEffectsContainer: Container = null;
 
     constructor(tSet: Tileset) {
         this.tileset = tSet;
@@ -130,6 +141,15 @@ export class Player {
                 }
                 break;
 
+            case ANIMATION_FRAMES.JUMP_LEFT:
+                for (let i = 0; i < this.jumpLeft.length; ++i) {
+                    //console.log(this.jumpLeft[i].play)
+                    if(this.jumpLeft[i].gotoAndPlay) {
+                        this.jumpLeft[i].gotoAndPlay(0);
+                    }
+                    this.playerContainer.addChild(this.jumpLeft[i]);
+                }
+                break;
         }
     }
 
@@ -150,9 +170,32 @@ export class Player {
         //this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
     }
 
+    jump() {
+        if (this.jumpAvailable) {
+            this.jumpAvailable = false;
+            this.currentlyJumping = true;
+
+            if (Camera.velocity.x > 0) {
+                Camera.pos.x += this.JUMP_DISTANCE;
+                //this.setEffectsAnimation(ANIMATION_FRAMES.JUMP_LEFT);
+                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_LEFT);
+
+            } else if (Camera.velocity.x < 0) {
+                Camera.pos.x -= this.JUMP_DISTANCE;
+            }
+            if (Camera.velocity.y > 0) {
+                Camera.pos.y += this.JUMP_DISTANCE;
+            } else if (Camera.velocity.y < 0) {
+                Camera.pos.y -= this.JUMP_DISTANCE;
+            }
+        }
+    }
+
     loadSprites(): void {
         this.playerContainer = new Container();
+        this.playerEffectsContainer = new Container();
         this.pixiManager.addChild(this.playerContainer);
+        this.pixiManager.addChild(this.playerEffectsContainer);
 
         // IDLE UP LEFT
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1154));
@@ -160,10 +203,10 @@ export class Player {
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1186));
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1187));
         this.idleSpriteUpLeft[0].x = this.idleSpriteUpLeft[0].x
-        this.idleSpriteUpLeft[1].x = this.idleSpriteUpLeft[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteUpLeft[2].y = this.idleSpriteUpLeft[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.idleSpriteUpLeft[3].x = this.idleSpriteUpLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteUpLeft[3].y = this.idleSpriteUpLeft[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteUpLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteUpLeft[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteUpLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteUpLeft[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // IDLE UP RIGHT
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1166));
@@ -171,10 +214,10 @@ export class Player {
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1198));
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1199));
         this.idleSpriteUpRight[0].x = this.idleSpriteUpRight[0].x
-        this.idleSpriteUpRight[1].x = this.idleSpriteUpRight[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteUpRight[2].y = this.idleSpriteUpRight[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.idleSpriteUpRight[3].x = this.idleSpriteUpRight[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteUpRight[3].y = this.idleSpriteUpRight[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteUpRight[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteUpRight[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteUpRight[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteUpRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // IDLE DOWN LEFT
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1250));
@@ -182,10 +225,10 @@ export class Player {
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1282));
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1283));
         this.idleSpriteDownLeft[0].x = this.idleSpriteDownLeft[0].x
-        this.idleSpriteDownLeft[1].x = this.idleSpriteDownLeft[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteDownLeft[2].y = this.idleSpriteDownLeft[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.idleSpriteDownLeft[3].x = this.idleSpriteDownLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteDownLeft[3].y = this.idleSpriteDownLeft[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteDownLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteDownLeft[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteDownLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteDownLeft[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // IDLE DOWN RIGHT
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1262));
@@ -193,10 +236,10 @@ export class Player {
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1294));
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1295));
         this.idleSpriteDownRight[0].x = this.idleSpriteDownRight[0].x
-        this.idleSpriteDownRight[1].x = this.idleSpriteDownRight[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteDownRight[2].y = this.idleSpriteDownRight[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.idleSpriteDownRight[3].x = this.idleSpriteDownRight[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.idleSpriteDownRight[3].y = this.idleSpriteDownRight[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteDownRight[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteDownRight[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.idleSpriteDownRight[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.idleSpriteDownRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // RUN LEFT
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(770));
@@ -204,10 +247,10 @@ export class Player {
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(802));
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(803));
         this.runSpriteLeft[0].x = this.runSpriteLeft[0].x
-        this.runSpriteLeft[1].x = this.runSpriteLeft[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteLeft[2].y = this.runSpriteLeft[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.runSpriteLeft[3].x = this.runSpriteLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteLeft[3].y = this.runSpriteLeft[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteLeft[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteLeft[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // RUN RIGHT
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(962));
@@ -215,10 +258,10 @@ export class Player {
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(994));
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(995));
         this.runSpriteRight[0].x = this.runSpriteRight[0].x
-        this.runSpriteRight[1].x = this.runSpriteRight[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteRight[2].y = this.runSpriteRight[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.runSpriteRight[3].x = this.runSpriteRight[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteRight[3].y = this.runSpriteRight[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteRight[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteRight[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteRight[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // RUN UP LEFT
         this.runSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(866));
@@ -226,10 +269,10 @@ export class Player {
         this.runSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(898));
         this.runSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(899));
         this.runSpriteUpLeft[0].x = this.runSpriteUpLeft[0].x
-        this.runSpriteUpLeft[1].x = this.runSpriteUpLeft[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteUpLeft[2].y = this.runSpriteUpLeft[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.runSpriteUpLeft[3].x = this.runSpriteUpLeft[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteUpLeft[3].y = this.runSpriteUpLeft[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteUpLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteUpLeft[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteUpLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteUpLeft[3].y = this.tileset.getTilesetInterface().tileheight;
 
         // RUN UP RIGHT
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1058));
@@ -237,55 +280,80 @@ export class Player {
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1090));
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1091));
         this.runSpriteUpRight[0].x = this.runSpriteUpRight[0].x
-        this.runSpriteUpRight[1].x = this.runSpriteUpRight[1].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteUpRight[2].y = this.runSpriteUpRight[2].y + this.tileset.getTilesetInterface().tileheight;
-        this.runSpriteUpRight[3].x = this.runSpriteUpRight[3].x + this.tileset.getTilesetInterface().tilewidth;
-        this.runSpriteUpRight[3].y = this.runSpriteUpRight[3].y + this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteUpRight[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteUpRight[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.runSpriteUpRight[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.runSpriteUpRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
+
+        // JUMP LEFT
+        for (let i = 1601; i <= 1608; ++i) {
+            this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
+        }
+        for (let i = 1632; i <= 1639; ++i) {
+            this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
+        }
+        for (let i = 0; i < 8; ++i) {
+            this.jumpLeft[i].x = this.tileset.getTilesetInterface().tilewidth * i;
+        }
+        for (let i = 8; i < 16; ++i) {
+            this.jumpLeft[i].x = this.tileset.getTilesetInterface().tilewidth * (i - 8);
+            this.jumpLeft[i].y = this.tileset.getTilesetInterface().tileheight;
+        }
+        for (let i = 0; i < this.jumpLeft.length; ++i) {
+            this.jumpLeft[i].loop = true;
+            this.jumpLeft[i].onLoop = () => {
+                if (this.currentlyJumping) {
+                    this.currentlyJumping = false;
+                }
+            }
+        }
     }
 
     update(delta: number) {
 
-        if (!Camera.velocity.x && !Camera.velocity.y) {
-            // IDLE Animations
-            if (
-                (this.direction & DIRECTON.LEFT || this.direction & DIRECTON.UP) &&
-                (!(this.direction & DIRECTON.DOWN) && !(this.direction & DIRECTON.RIGHT))
-            ) {
-                this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_UP_LEFT);
-            }
-            else if (
-                (this.direction & DIRECTON.RIGHT || this.direction & DIRECTON.UP) &&
-                (!(this.direction & DIRECTON.DOWN) && !(this.direction & DIRECTON.LEFT))
-            ) {
-                this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_UP_RIGHT);
-            }
-            else if (
-                (this.direction & DIRECTON.LEFT || this.direction & DIRECTON.DOWN) &&
-                (!(this.direction & DIRECTON.UP) && !(this.direction & DIRECTON.RIGHT))
-            ) {
-                this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_LEFT);
-            }
-            else if (
-                (this.direction & DIRECTON.RIGHT || this.direction & DIRECTON.DOWN) &&
-                (!(this.direction & DIRECTON.UP) && !(this.direction & DIRECTON.LEFT))
-            ) {
-                this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_RIGHT);
-            }
-        } else {
-            // Moving Animations
-            if (this.direction & DIRECTON.LEFT) {
-                if (this.direction & DIRECTON.UP && Camera.velocity.y !== 0) {
-                    this.setPlayerAnimation(ANIMATION_FRAMES.RUN_UP_LEFT);
-                } else {
-                    this.setPlayerAnimation(ANIMATION_FRAMES.RUN_LEFT);
+        if (!this.currentlyJumping) {
+            if (!Camera.velocity.x && !Camera.velocity.y) {
+                // IDLE Animations
+                if (
+                    (this.direction & DIRECTON.LEFT || this.direction & DIRECTON.UP) &&
+                    (!(this.direction & DIRECTON.DOWN) && !(this.direction & DIRECTON.RIGHT))
+                ) {
+                    this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_UP_LEFT);
+                }
+                else if (
+                    (this.direction & DIRECTON.RIGHT || this.direction & DIRECTON.UP) &&
+                    (!(this.direction & DIRECTON.DOWN) && !(this.direction & DIRECTON.LEFT))
+                ) {
+                    this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_UP_RIGHT);
+                }
+                else if (
+                    (this.direction & DIRECTON.LEFT || this.direction & DIRECTON.DOWN) &&
+                    (!(this.direction & DIRECTON.UP) && !(this.direction & DIRECTON.RIGHT))
+                ) {
+                    this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_LEFT);
+                }
+                else if (
+                    (this.direction & DIRECTON.RIGHT || this.direction & DIRECTON.DOWN) &&
+                    (!(this.direction & DIRECTON.UP) && !(this.direction & DIRECTON.LEFT))
+                ) {
+                    this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_RIGHT);
                 }
             } else {
-                if (this.direction & DIRECTON.RIGHT) {
+                // Moving Animations
+                if (this.direction & DIRECTON.LEFT) {
                     if (this.direction & DIRECTON.UP && Camera.velocity.y !== 0) {
-                        this.setPlayerAnimation(ANIMATION_FRAMES.RUN_UP_RIGHT);
+                        this.setPlayerAnimation(ANIMATION_FRAMES.RUN_UP_LEFT);
                     } else {
-                        this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
+                        this.setPlayerAnimation(ANIMATION_FRAMES.RUN_LEFT);
+                    }
+                } else {
+                    if (this.direction & DIRECTON.RIGHT) {
+                        if (this.direction & DIRECTON.UP && Camera.velocity.y !== 0) {
+                            this.setPlayerAnimation(ANIMATION_FRAMES.RUN_UP_RIGHT);
+                        } else {
+                            this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
+                        }
                     }
                 }
             }
@@ -296,5 +364,6 @@ export class Player {
         this.position.y = Camera.pos.y + PixiManager.INITIAL_HEIGHT / 2;
 
         this.playerContainer.position.set(this.position.x - Camera.pos.x, this.position.y - Camera.pos.y);
+        this.playerEffectsContainer.position = this.playerContainer.position;
     }
 }

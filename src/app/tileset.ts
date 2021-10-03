@@ -49,7 +49,7 @@ export class Tileset {
                 })
             });
             
-            const animatedSprite = new AnimatedSprite(textureArray, true);
+            let animatedSprite = new AnimatedSprite(textureArray, true);
             animatedSprite.animationSpeed = 1;
             animatedSprite.loop = true;
             animatedSprite.play();
