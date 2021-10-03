@@ -1,12 +1,12 @@
 { "columns":32,
  "image":"..\/Tilemap.png",
- "imageheight":2028,
+ "imageheight":4048,
  "imagewidth":512,
  "margin":0,
  "name":"Tileset",
  "spacing":0,
- "tilecount":4032,
- "tiledversion":"1.6.0",
+ "tilecount":8096,
+ "tiledversion":"1.7.2",
  "tileheight":16,
  "tiles":[
         {
