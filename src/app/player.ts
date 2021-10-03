@@ -83,6 +83,7 @@ export class Player {
     getContainer(): Container { return this.playerContainer; }
 
     init() {
+        this.direction |= DIRECTON.LEFT;
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
 
@@ -211,11 +212,9 @@ export class Player {
                 this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_LEFT);
             } else if (Camera.velocity.x < 0) {
                 Camera.pos.x -= this.JUMP_DISTANCE;
-                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_RIGHT);
-                if (this.playerContainer.scale.x > 0) {
-                    this.playerContainer.scale.x *= -1;
-                    this.playerContainer.position.x = this.playerContainer.width / 2 - (this.playerContainer.scale.x * this.playerContainer.width / 2);
-                }
+                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_UP_DOWN);
+
+
             }
         }
     }
@@ -315,20 +314,18 @@ export class Player {
         this.runSpriteUpRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
 
+        
         // JUMP LEFT
-        for (let i = 1601; i <= 1608; ++i) {
-            this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
-        }
-        for (let i = 1632; i <= 1639; ++i) {
-            this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
-        }
-        for (let i = 0; i < 8; ++i) {
-            this.jumpLeft[i].x = this.tileset.getTilesetInterface().tilewidth * i;
-        }
-        for (let i = 8; i < 16; ++i) {
-            this.jumpLeft[i].x = this.tileset.getTilesetInterface().tilewidth * (i - 8);
-            this.jumpLeft[i].y = this.tileset.getTilesetInterface().tileheight;
-        }
+        this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1601));
+        this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1602));
+        this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1633));
+        this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1634));
+        this.jumpLeft[0].x = this.jumpLeft[0].x
+        this.jumpLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.jumpLeft[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.jumpLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.jumpLeft[3].y = this.tileset.getTilesetInterface().tileheight;
+
         for (let i = 0; i < this.jumpLeft.length; ++i) {
             this.jumpLeft[i].loop = true;
             this.jumpLeft[i].onLoop = () => {
@@ -336,12 +333,10 @@ export class Player {
                 if (this.jumpLeft[i].gotoAndStop) {
                     this.jumpLeft[i].gotoAndStop(0);
                 }
-                if (this.playerContainer.scale.x < 0) {
-                    this.playerContainer.scale.x *= -1;
-                    this.playerContainer.position.x = this.playerContainer.width / 2 + this.playerContainer.scale.x * this.playerContainer.width / 2;
-                }
             }
         }
+
+
 
         // JUMP RIGHT
         for (let i = 1610; i <= 1616; ++i) {
@@ -358,7 +353,7 @@ export class Player {
             this.jumpRight[i].y = this.tileset.getTilesetInterface().tileheight;
         }
         for (let i = 0; i < this.jumpRight.length; ++i) {
-            this.jumpLeft[i].loop = true;
+            this.jumpRight[i].loop = true;
             this.jumpRight[i].onLoop = () => {
                 this.currentlyJumping = false;
                 if (this.jumpRight[i].gotoAndStop) {

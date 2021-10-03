@@ -9,12 +9,14 @@ import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
 import { DIRECTON, Player } from './player';
-const mapData = require('../assets/maps/map1.json')
+import { LevelManager } from './services/level-manager/level-manager';
+
 
 export class Game {
 
     // Services
     private pixiManager: PixiManager;
+    private levelManager: LevelManager;
     private soundManager: SoundManager;
     private webService: WebService;
     private userProfile: UserProfile;
@@ -31,6 +33,7 @@ export class Game {
         this.soundManager = getServiceByClass(SoundManager);
         this.webService = getServiceByClass(WebService);
         this.userProfile = getServiceByClass(UserProfile);
+        this.levelManager = getServiceByClass(LevelManager);
 
         this.init();
     }
@@ -64,7 +67,6 @@ export class Game {
     private init() {
         //addEventListener('wheel', this.scrollFunction.bind(this));
 
-
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
 
@@ -74,19 +76,15 @@ export class Game {
         this.titleScreen = new TitleScreen();
         this.titleScreen.display();
 
+        this.levelManager.loadLevels();
+
         /*
             // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
         */
     }
 
     titleScreenPlayButtonClicked() {
-        this.tileMap = new Tilemap();
-        let mapObject = mapData;
-        console.log(mapObject)
-        this.tileMap.loadLevel(mapObject);
-        this.tileMap.showLevel();
-
-
+        this.tileMap = this.levelManager.chooseLevel(0);
         this.player = new Player(this.tileMap.getTileset());
     }
 
