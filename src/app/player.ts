@@ -1,5 +1,10 @@
+import { Filter } from "@pixi/core";
 import { Container } from "@pixi/display";
+import { GlitchFilter } from "@pixi/filter-glitch";
+import { ShockwaveFilter } from "@pixi/filter-shockwave";
+import { TwistFilter } from "@pixi/filter-twist";
 import { AnimatedSprite } from "@pixi/sprite-animated";
+import { filters } from "pixi.js";
 import { Camera } from "./services/camera/camera";
 import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
@@ -36,6 +41,7 @@ export class Player {
     public jumpAvailable = true;
     public currentlyJumping = false;
     private JUMP_DISTANCE: number = 200;
+    private glitchFilter: ShockwaveFilter;
 
     public position = {
         x: 0,
@@ -95,6 +101,14 @@ export class Player {
         this.playerContainer.y = PixiManager.INITIAL_HEIGHT / 2;
 
         this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
+
+        this.loadFilters();
+    }
+
+    loadFilters() {
+        this.glitchFilter = new ShockwaveFilter()
+        this.glitchFilter.time = 0;
+
     }
 
     setPlayerAnimation(animationEvent: number) {
@@ -223,6 +237,7 @@ export class Player {
     dead() {
         this.alive = false;
         console.log("DEAD")
+       // this.playerContainer.filters = [this.glitchFilter]
     }
 
     loadSprites(): void {

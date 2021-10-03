@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "howler": "^2.2.1",
+    "pixi-filters": "^4.1.5",
     "pixi.js": "^6.1.3"
   }
 }
