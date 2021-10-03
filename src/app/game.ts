@@ -148,7 +148,7 @@ export class Game {
         }
 
         if (this.tileMap) {
-            this.tileMap.update(delta);
+            this.tileMap.update(delta, this.player);
             this.tileMap.getContainer().scale.set(Camera.zoom, Camera.zoom);
             this.tileMap.getContainer().position.set(Camera.pos.x, Camera.pos.y);
         }

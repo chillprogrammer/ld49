@@ -32,6 +32,7 @@ export enum DIRECTON {
 
 export class Player {
 
+    public alive: boolean = true;
     public jumpAvailable = true;
     public currentlyJumping = false;
     private JUMP_DISTANCE: number = 200;
@@ -219,6 +220,11 @@ export class Player {
         }
     }
 
+    dead() {
+        this.alive = false;
+        console.log("DEAD")
+    }
+
     loadSprites(): void {
         this.playerContainer = new Container();
         this.playerEffectsContainer = new Container();
@@ -230,7 +236,7 @@ export class Player {
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1155));
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1186));
         this.idleSpriteUpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1187));
-        this.idleSpriteUpLeft[0].x = this.idleSpriteUpLeft[0].x
+        this.idleSpriteUpLeft[0].x = this.idleSpriteUpLeft[0].x;
         this.idleSpriteUpLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteUpLeft[2].y = this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteUpLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -241,7 +247,7 @@ export class Player {
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1167));
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1198));
         this.idleSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1199));
-        this.idleSpriteUpRight[0].x = this.idleSpriteUpRight[0].x
+        this.idleSpriteUpRight[0].x = this.idleSpriteUpRight[0].x;
         this.idleSpriteUpRight[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteUpRight[2].y = this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteUpRight[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -252,7 +258,7 @@ export class Player {
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1251));
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1282));
         this.idleSpriteDownLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1283));
-        this.idleSpriteDownLeft[0].x = this.idleSpriteDownLeft[0].x
+        this.idleSpriteDownLeft[0].x = this.idleSpriteDownLeft[0].x;
         this.idleSpriteDownLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteDownLeft[2].y = this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteDownLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -263,7 +269,7 @@ export class Player {
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1263));
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1294));
         this.idleSpriteDownRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1295));
-        this.idleSpriteDownRight[0].x = this.idleSpriteDownRight[0].x
+        this.idleSpriteDownRight[0].x = this.idleSpriteDownRight[0].x;
         this.idleSpriteDownRight[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.idleSpriteDownRight[2].y = this.tileset.getTilesetInterface().tileheight;
         this.idleSpriteDownRight[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -274,7 +280,7 @@ export class Player {
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(771));
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(802));
         this.runSpriteLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(803));
-        this.runSpriteLeft[0].x = this.runSpriteLeft[0].x
+        this.runSpriteLeft[0].x = this.runSpriteLeft[0].x;
         this.runSpriteLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.runSpriteLeft[2].y = this.tileset.getTilesetInterface().tileheight;
         this.runSpriteLeft[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -285,7 +291,7 @@ export class Player {
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(963));
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(994));
         this.runSpriteRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(995));
-        this.runSpriteRight[0].x = this.runSpriteRight[0].x
+        this.runSpriteRight[0].x = this.runSpriteRight[0].x;
         this.runSpriteRight[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.runSpriteRight[2].y = this.tileset.getTilesetInterface().tileheight;
         this.runSpriteRight[3].x = this.tileset.getTilesetInterface().tilewidth;
@@ -307,20 +313,19 @@ export class Player {
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1059));
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1090));
         this.runSpriteUpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(1091));
-        this.runSpriteUpRight[0].x = this.runSpriteUpRight[0].x
+        this.runSpriteUpRight[0].x = this.runSpriteUpRight[0].x;
         this.runSpriteUpRight[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.runSpriteUpRight[2].y = this.tileset.getTilesetInterface().tileheight;
         this.runSpriteUpRight[3].x = this.tileset.getTilesetInterface().tilewidth;
         this.runSpriteUpRight[3].y = this.tileset.getTilesetInterface().tileheight;
 
 
-        
         // JUMP LEFT
         this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1601));
         this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1602));
         this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1633));
         this.jumpLeft.push(<AnimatedSprite>this.tileset.getSpriteForTile(1634));
-        this.jumpLeft[0].x = this.jumpLeft[0].x
+        this.jumpLeft[0].x = this.jumpLeft[0].x;
         this.jumpLeft[1].x = this.tileset.getTilesetInterface().tilewidth;
         this.jumpLeft[2].y = this.tileset.getTilesetInterface().tileheight;
         this.jumpLeft[3].x = this.tileset.getTilesetInterface().tilewidth;

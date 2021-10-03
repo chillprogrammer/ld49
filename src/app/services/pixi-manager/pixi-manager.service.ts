@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js"
-import { Container } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 
 export class PixiManager {
 
@@ -38,6 +38,12 @@ export class PixiManager {
 
     setGameLoop(functionToRun: any) {
         this.app.ticker.add(delta => functionToRun(delta));
+    }
+
+    static boxCollision(c1: Container | Sprite, c2: Container | Sprite) {
+        var ab = c1.getBounds();
+        var bb = c2.getBounds();
+        return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
     }
 
     /**
