@@ -19,7 +19,8 @@ export enum ANIMATION_FRAMES {
     RUN_UP_RIGHT,
 
     JUMP_LEFT,
-    JUMP_RIGHT
+    JUMP_RIGHT,
+    JUMP_UP_DOWN
 };
 
 export enum DIRECTON {
@@ -61,6 +62,7 @@ export class Player {
     // SPECIAL Sprites
     private jumpLeft: AnimatedSprite[] = [];
     private jumpRight: AnimatedSprite[] = [];
+    private jumpUpDown: AnimatedSprite[] = [];
 
 
     // Services
@@ -162,6 +164,15 @@ export class Player {
                     this.playerContainer.addChild(this.jumpLeft[i]);
                 }
                 break;
+
+            case ANIMATION_FRAMES.JUMP_UP_DOWN:
+                for (let i = 0; i < this.jumpUpDown.length; ++i) {
+                    if (this.jumpUpDown[i].gotoAndPlay) {
+                        this.jumpUpDown[i].gotoAndPlay(0);
+                    }
+                    this.playerContainer.addChild(this.jumpUpDown[i]);
+                }
+                break;
         }
     }
 
@@ -187,6 +198,14 @@ export class Player {
             this.jumpAvailable = false;
             this.currentlyJumping = true;
 
+            if (Camera.velocity.y > 0) {
+                Camera.pos.y += this.JUMP_DISTANCE;
+                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_UP_DOWN);
+            } else if (Camera.velocity.y < 0) {
+                Camera.pos.y -= this.JUMP_DISTANCE;
+                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_UP_DOWN);
+            }
+
             if (Camera.velocity.x > 0) {
                 Camera.pos.x += this.JUMP_DISTANCE;
                 this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_LEFT);
@@ -197,11 +216,6 @@ export class Player {
                     this.playerContainer.scale.x *= -1;
                     this.playerContainer.position.x = this.playerContainer.width / 2 - (this.playerContainer.scale.x * this.playerContainer.width / 2);
                 }
-            }
-            if (Camera.velocity.y > 0) {
-                Camera.pos.y += this.JUMP_DISTANCE;
-            } else if (Camera.velocity.y < 0) {
-                Camera.pos.y -= this.JUMP_DISTANCE;
             }
         }
     }
@@ -354,6 +368,28 @@ export class Player {
 
             }
         }
+
+        // JUMP UP OR DOWN
+        this.jumpUpDown.push(<AnimatedSprite>this.tileset.getSpriteForTile(1596));
+        this.jumpUpDown.push(<AnimatedSprite>this.tileset.getSpriteForTile(1597));
+        this.jumpUpDown.push(<AnimatedSprite>this.tileset.getSpriteForTile(1628));
+        this.jumpUpDown.push(<AnimatedSprite>this.tileset.getSpriteForTile(1629));
+        this.jumpUpDown[0].x = this.jumpUpDown[0].x
+        this.jumpUpDown[1].x = this.tileset.getTilesetInterface().tilewidth;
+        this.jumpUpDown[2].y = this.tileset.getTilesetInterface().tileheight;
+        this.jumpUpDown[3].x = this.tileset.getTilesetInterface().tilewidth;
+        this.jumpUpDown[3].y = this.tileset.getTilesetInterface().tileheight;
+
+        for (let i = 0; i < this.jumpUpDown.length; ++i) {
+            this.jumpUpDown[i].loop = true;
+            this.jumpUpDown[i].onLoop = () => {
+                this.currentlyJumping = false;
+                if (this.jumpUpDown[i].gotoAndStop) {
+                    this.jumpUpDown[i].gotoAndStop(0);
+                }
+            }
+        }
+
     }
 
     update(delta: number) {
