@@ -144,7 +144,9 @@ export class Game {
         if (KeyManager.isKeyPressed(' ')) {
             this.player.jump();
         } else {
-            this.player.jumpAvailable = true;
+            if (!this.player.currentlyJumping) {
+                this.player.jumpAvailable = true;
+            }
         }
 
         if (this.tileMap) {

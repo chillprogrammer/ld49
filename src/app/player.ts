@@ -1,6 +1,7 @@
 import { Container } from "@pixi/display";
 import { AnimatedSprite } from "@pixi/sprite-animated";
 import { Camera } from "./services/camera/camera";
+import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
@@ -17,7 +18,8 @@ export enum ANIMATION_FRAMES {
     RUN_RIGHT,
     RUN_UP_RIGHT,
 
-    JUMP_LEFT
+    JUMP_LEFT,
+    JUMP_RIGHT
 };
 
 export enum DIRECTON {
@@ -30,7 +32,7 @@ export enum DIRECTON {
 export class Player {
 
     public jumpAvailable = true;
-    private currentlyJumping = false;
+    public currentlyJumping = false;
     private JUMP_DISTANCE: number = 200;
 
     public position = {
@@ -87,6 +89,8 @@ export class Player {
 
         this.playerContainer.x = PixiManager.INITIAL_WIDTH / 2;
         this.playerContainer.y = PixiManager.INITIAL_HEIGHT / 2;
+
+        this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
     }
 
     setPlayerAnimation(animationEvent: number) {
@@ -143,8 +147,16 @@ export class Player {
 
             case ANIMATION_FRAMES.JUMP_LEFT:
                 for (let i = 0; i < this.jumpLeft.length; ++i) {
-                    //console.log(this.jumpLeft[i].play)
-                    if(this.jumpLeft[i].gotoAndPlay) {
+                    if (this.jumpLeft[i].gotoAndPlay) {
+                        this.jumpLeft[i].gotoAndPlay(0);
+                    }
+                    this.playerContainer.addChild(this.jumpLeft[i]);
+                }
+                break;
+
+            case ANIMATION_FRAMES.JUMP_RIGHT:
+                for (let i = 0; i < this.jumpLeft.length; ++i) {
+                    if (this.jumpLeft[i].gotoAndPlay) {
                         this.jumpLeft[i].gotoAndPlay(0);
                     }
                     this.playerContainer.addChild(this.jumpLeft[i]);
@@ -171,17 +183,20 @@ export class Player {
     }
 
     jump() {
-        if (this.jumpAvailable) {
+        if (this.jumpAvailable && (Camera.velocity.x !== 0 || Camera.velocity.y !== 0)) {
             this.jumpAvailable = false;
             this.currentlyJumping = true;
 
             if (Camera.velocity.x > 0) {
                 Camera.pos.x += this.JUMP_DISTANCE;
-                //this.setEffectsAnimation(ANIMATION_FRAMES.JUMP_LEFT);
                 this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_LEFT);
-
             } else if (Camera.velocity.x < 0) {
                 Camera.pos.x -= this.JUMP_DISTANCE;
+                this.setPlayerAnimation(ANIMATION_FRAMES.JUMP_RIGHT);
+                if (this.playerContainer.scale.x > 0) {
+                    this.playerContainer.scale.x *= -1;
+                    this.playerContainer.position.x = this.playerContainer.width / 2 - (this.playerContainer.scale.x * this.playerContainer.width / 2);
+                }
             }
             if (Camera.velocity.y > 0) {
                 Camera.pos.y += this.JUMP_DISTANCE;
@@ -303,9 +318,40 @@ export class Player {
         for (let i = 0; i < this.jumpLeft.length; ++i) {
             this.jumpLeft[i].loop = true;
             this.jumpLeft[i].onLoop = () => {
-                if (this.currentlyJumping) {
-                    this.currentlyJumping = false;
+                this.currentlyJumping = false;
+                if (this.jumpLeft[i].gotoAndStop) {
+                    this.jumpLeft[i].gotoAndStop(0);
                 }
+                if (this.playerContainer.scale.x < 0) {
+                    this.playerContainer.scale.x *= -1;
+                    this.playerContainer.position.x = this.playerContainer.width / 2 + this.playerContainer.scale.x * this.playerContainer.width / 2;
+                }
+            }
+        }
+
+        // JUMP RIGHT
+        for (let i = 1610; i <= 1616; ++i) {
+            this.jumpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
+        }
+        for (let i = 1642; i <= 1648; ++i) {
+            this.jumpRight.push(<AnimatedSprite>this.tileset.getSpriteForTile(i));
+        }
+        for (let i = 0; i < 7; ++i) {
+            this.jumpRight[i].x = this.tileset.getTilesetInterface().tilewidth * i;
+        }
+        for (let i = 7; i < 14; ++i) {
+            this.jumpRight[i].x = this.tileset.getTilesetInterface().tilewidth * (i - 8);
+            this.jumpRight[i].y = this.tileset.getTilesetInterface().tileheight;
+        }
+        for (let i = 0; i < this.jumpRight.length; ++i) {
+            this.jumpLeft[i].loop = true;
+            this.jumpRight[i].onLoop = () => {
+                this.currentlyJumping = false;
+                if (this.jumpRight[i].gotoAndStop) {
+                    this.jumpRight[i].gotoAndStop(0);
+                }
+
+
             }
         }
     }
@@ -359,7 +405,6 @@ export class Player {
             }
         }
 
-        this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
         this.position.x = Camera.pos.x + PixiManager.INITIAL_WIDTH / 2;
         this.position.y = Camera.pos.y + PixiManager.INITIAL_HEIGHT / 2;
 
