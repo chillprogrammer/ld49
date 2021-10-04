@@ -5,6 +5,8 @@ import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
 import { Camera } from "./services/camera/camera";
+import { LevelManager } from "./services/level-manager/level-manager";
+import { DIRECTON, Player } from './player';
 
 export enum ANIMATION_FRAMES {
     LASER_1
@@ -20,6 +22,7 @@ export class laser {
 
 
     // Services
+    private levelManager : LevelManager = null;
     private textureManager: TextureManager = null;
     private pixiManager: PixiManager = null;
 
@@ -34,16 +37,18 @@ export class laser {
     }
 
     getContainer(): Container { return this.laserContainer; }
-
+    
+    
     init() {
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
+        this.levelManager = getServiceByClass(LevelManager);
 
         this.loadSprites();
 
 
-        this.laserContainer.x = (PixiManager.INITIAL_WIDTH / 2);
-        this.laserContainer.y = 0;
+        
+        
 
         this.laserContainer.scale.y = (2.8)
     }
@@ -69,7 +74,7 @@ export class laser {
 
     loadSprites(): void {
         this.laserContainer = new Container();
-        this.pixiManager.addChild(this.laserContainer);
+        this.levelManager.getCurrentLevelTilemap().getContainer().addChild(this.laserContainer);
 
         // laser 1
         this.laser1.push(<AnimatedSprite>this.tileset.getSpriteForTile(1825));
@@ -121,20 +126,31 @@ export class laser {
 
     }
 
-    laserFollow()
+    laserFollow(player: Player)
     {
-        for(let i = 0; i < this.laser1.length; i++)
-        {
+        /*for (let i = 0; i < this.jumpUpDown.length; ++i) {
+            this.jumpUpDown[i].loop = true;
+            this.jumpUpDown[i].onLoop = () => {
+                this.currentlyJumping = false;
+                if (this.jumpUpDown[i].gotoAndStop) {
+                    this.jumpUpDown[i].gotoAndStop(0);
+                }
+            }
+        }   */
+        this.laserContainer.position.x = ((-Camera.pos.x * Camera.zoom)) / 2 ;
+        this.laserContainer.position.y = ((-Camera.pos.y * Camera.zoom)) / 2 ;
+        this.setLaserAnimation(ANIMATION_FRAMES.LASER_1)
+        for (let i = 0; i < this.laser1.length; ++i) {
             this.laser1[i].loop = true;
+            this.laser1[i].play();
             this.laser1[i].onLoop = () => {
-                this.laser1[i].loop = false;
                 if (this.laser1[i].gotoAndStop) {
                     this.laser1[i].gotoAndStop(0);
                 }
             }
         }
-         
     }
+    
 
     update(delta: number) {
         

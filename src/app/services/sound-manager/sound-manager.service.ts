@@ -1,6 +1,6 @@
 import { Howl, Howler } from 'howler';
 
-const ASSET_FOLDER_PATH = 'assets/sound';
+const ASSET_FOLDER_PATH = 'assets/Sound';
 
 interface SoundObject {
     path: string,
@@ -16,6 +16,12 @@ export class SoundManager {
     }
 
     private init() {
+        var sound = new Howl({
+            src: ['assets/Sound/Synth_but_perfect_loop.mp3'],
+            autoplay: false,
+            loop: false,
+            volume: 0.1
+        });
 
     }
 
@@ -26,7 +32,7 @@ export class SoundManager {
     loadSoundIntoMemory(path: string): void {
         let sound = new Howl({
             src: [`${ASSET_FOLDER_PATH}/${path}`],
-            volume: 0.4
+            volume: 0.1
         });
         this.soundList.push({ path: path, sound: sound })
     }
@@ -64,7 +70,7 @@ export class SoundManager {
         this.loadSoundIntoMemory(path);
         return new Howl({
             src: [`${ASSET_FOLDER_PATH}/${path}`],
-            volume: 0.5
+            volume: 0.1
         });
     }
 }
