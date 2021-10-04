@@ -34,6 +34,7 @@ export enum DIRECTON {
 
 export class Player {
 
+    public hasMoved: boolean = false;
     public alive: boolean = true;
     public jumpAvailable = true;
     public currentlyJumping = false;
@@ -91,6 +92,7 @@ export class Player {
 
     init() {
         this.direction |= DIRECTON.LEFT;
+        this.direction |= DIRECTON.DOWN;
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
 
@@ -198,18 +200,22 @@ export class Player {
     }
 
     moveUp() {
+        this.hasMoved = true;
         Camera.velocity.y = Camera.speed;
         // this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_UP_LEFT);
     }
     moveDown() {
+        this.hasMoved = true;
         Camera.velocity.y = -Camera.speed;
         //this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_RIGHT);
     }
     moveLeft() {
+        this.hasMoved = true;
         Camera.velocity.x = Camera.speed;
         //this.setPlayerAnimation(ANIMATION_FRAMES.RUN_LEFT);
     }
     moveRight() {
+        this.hasMoved = true;
         Camera.velocity.x = -Camera.speed;
         //this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
     }
@@ -249,6 +255,7 @@ export class Player {
                     this.pixiManager.removeChild(this.youDiedText);
                 }
                 this.alive = true;
+                this.hasMoved = false;
                 console.log("ALIVE")
                 Camera.pos.x = 0;
                 Camera.pos.y = 0;

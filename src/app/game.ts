@@ -94,6 +94,7 @@ export class Game {
 
     respawn() {
         this.tileMap.getContainer().filters = [];
+        this.tileMap.reset();
     }
 
     /**
@@ -101,7 +102,7 @@ export class Game {
      * @param delta the delta time between each frame
      */
     gameLoop(delta: number) {
-         this.gameLoopCounter += delta;
+        this.gameLoopCounter += delta;
 
         if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
@@ -111,6 +112,12 @@ export class Game {
         if(this.gameLoopCounter >= 300)
         {
             this.laser.laserFollow(this.player);
+
+        if (this.gameLoopCounter > 150 && this.gameLoopCounter < 160) {
+            this.tileMap.triggerTileFall();
+        }
+        if (this.gameLoopCounter >= 300) {
+            //this.laser.laserFollow(this.player: Player);
             console.log("a")
             this.gameLoopCounter = 0;
         }
@@ -120,18 +127,10 @@ export class Game {
                 this.player.moveUp();
                 this.player.direction &= ~DIRECTON.DOWN;
                 this.player.direction |= DIRECTON.UP
-                /*if(!Camera.velocity.x) {
-                    this.player.direction &= ~DIRECTON.LEFT;
-                    this.player.direction &= ~DIRECTON.RIGHT;
-                }*/
             } else if (KeyManager.isKeyPressed('s')) {
                 this.player.moveDown();
                 this.player.direction |= DIRECTON.DOWN;
                 this.player.direction &= ~DIRECTON.UP;
-                /*if(!Camera.velocity.x) {
-                    this.player.direction &= ~DIRECTON.LEFT;
-                    this.player.direction &= ~DIRECTON.RIGHT;
-                }*/
             } else {
                 Camera.velocity.y = 0;
             }
@@ -139,19 +138,11 @@ export class Game {
                 this.player.moveLeft();
                 this.player.direction &= ~DIRECTON.RIGHT;
                 this.player.direction |= DIRECTON.LEFT;
-                /*if(!Camera.velocity.y) {
-                    this.player.direction &= ~DIRECTON.UP;
-                    this.player.direction &= ~DIRECTON.DOWN;
-                }*/
             }
             else if (KeyManager.isKeyPressed('d')) {
                 this.player.moveRight();
                 this.player.direction |= DIRECTON.RIGHT;
                 this.player.direction &= ~DIRECTON.LEFT;
-                /*if(!Camera.velocity.y) {
-                    this.player.direction &= ~DIRECTON.UP;
-                    this.player.direction &= ~DIRECTON.DOWN;
-                }*/
             } else {
                 Camera.velocity.x = 0;
             }
@@ -180,8 +171,8 @@ export class Game {
         if (this.laser) {
             this.laser.update(delta);
         }
-    
 
         Camera.update(delta);
     }
+}
 }
