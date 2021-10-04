@@ -1,8 +1,6 @@
 import { Filter } from "@pixi/core";
 import { Container } from "@pixi/display";
-import { GlitchFilter } from "@pixi/filter-glitch";
 import { ShockwaveFilter } from "@pixi/filter-shockwave";
-import { TwistFilter } from "@pixi/filter-twist";
 import { AnimatedSprite } from "@pixi/sprite-animated";
 import { filters } from "pixi.js";
 import { Camera } from "./services/camera/camera";

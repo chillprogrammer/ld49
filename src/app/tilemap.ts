@@ -7,6 +7,7 @@ import { Tileset } from "./tileset";
 import { Camera } from "./services/camera/camera";
 import * as PIXI from "pixi.js";
 import { Player } from "./player";
+import { laser } from './laser';
 
 interface TiledMapObject {
     backgroundcolor: string,
