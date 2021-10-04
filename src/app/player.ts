@@ -46,6 +46,7 @@ export class Player {
     private JUMP_DISTANCE: number = 200;
     private glitchFilter: PixelateFilter;
     private shockwaveFilter: ShockwaveFilter;
+    private DEATH_TIME: number = 3000;
 
     public position = {
         x: 0,
@@ -249,10 +250,17 @@ export class Player {
         if (!this.pixiManager.getContainer().children.includes(this.youDiedText)) {
             this.pixiManager.addChild(this.youDiedText);
 
-            //const rgbSplitFilter = new RGBSplitFilter();
-            //const displacementSprite = Sprite.from('./assets/displacement.png');
-            //const dispFilter = new filters.DisplacementFilter(displacementSprite, 20);
-            //this.youDiedText.filters = [rgbSplitFilter, dispFilter]
+            setTimeout(() => {
+                if (this.pixiManager.getContainer().children.includes(this.youDiedText)) {
+                    this.pixiManager.removeChild(this.youDiedText);
+                }
+                this.alive = true;
+                console.log("ALIVE")
+                Camera.pos.x = 0;
+                Camera.pos.y = 0;
+                this.playerContainer.filters = [];
+                document.dispatchEvent(new CustomEvent("deadNoLonger"));
+            }, this.DEATH_TIME);
         }
 
         this.playerContainer.filters = [this.glitchFilter];

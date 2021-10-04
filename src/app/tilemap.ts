@@ -152,7 +152,6 @@ export class Tilemap {
                 let tile: Sprite = <Sprite>(this.tilemapContainer.children[i]);
                 let tileID: number = this.tileIDList[i];
                 if (PixiManager.boxCollision(player.getContainer(), <Sprite>tile)) {
-                    //tile.tint=0xff0000;
                     if (tileID != 0) {
                         collision = true;
                     }

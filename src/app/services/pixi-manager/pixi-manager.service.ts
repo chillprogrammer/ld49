@@ -41,7 +41,10 @@ export class PixiManager {
     }
 
     static boxCollision(c1: Container | Sprite, c2: Container | Sprite) {
+        // c1 is always PLAYER.
         var ab = c1.getBounds();
+        ab.width /= 4;
+        ab.x += ab.width;
         var bb = c2.getBounds();
         return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
     }

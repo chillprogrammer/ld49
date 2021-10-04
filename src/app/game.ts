@@ -70,7 +70,7 @@ export class Game {
 
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
-
+        document.addEventListener('deadNoLonger', this.respawn.bind(this));
         // Sets the game loop
         this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
@@ -87,6 +87,10 @@ export class Game {
     titleScreenPlayButtonClicked() {
         this.tileMap = this.levelManager.chooseLevel(0);
         this.player = new Player(this.tileMap.getTileset());
+    }
+
+    respawn() {
+        this.tileMap.getContainer().filters = [];
     }
 
     /**
