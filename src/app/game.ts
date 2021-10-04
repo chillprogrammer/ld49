@@ -26,6 +26,8 @@ export class Game {
     // Managers
     private tileMap: Tilemap = null;
 
+    private CURRENT_LEVEL: number = 0;
+
     private titleScreen: TitleScreen = null;
     private player: Player = null;
     private laser: laser = null;
@@ -73,6 +75,7 @@ export class Game {
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
         document.addEventListener('deadNoLonger', this.respawn.bind(this));
+        document.addEventListener('levelWon', this.levelWon.bind(this));
         // Sets the game loop
         this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
@@ -101,6 +104,27 @@ export class Game {
         this.tileMap.reset();
     }
 
+    levelWon() {
+        Camera.reset();
+        this.CURRENT_LEVEL++;
+        if (this.CURRENT_LEVEL > 1) {
+            this.CURRENT_LEVEL = 0;
+        }
+
+        this.levelManager.getCurrentLevelTilemap().hideLevel();
+        this.tileMap = this.levelManager.chooseLevel(this.CURRENT_LEVEL);
+        let playerContainer = this.player.getContainer();
+        if(this.pixiManager.getContainer().children.includes(playerContainer)) {
+            this.pixiManager.removeChild(playerContainer);
+        }
+
+        setTimeout(()=> {
+            this.respawn();
+            this.pixiManager.addChild(playerContainer);
+        }, 500)
+        
+    }
+
     /**
      * The main game loop - with delta time parameter.
      * @param delta the delta time between each frame
@@ -114,9 +138,9 @@ export class Game {
         }
 
         if (this.gameLoopCounter > 150 && this.gameLoopCounter < 160) {
-            
+
         }
-        
+
         if (this.gameLoopCounter >= 300) {
             //this.laser.laserFollow(this.player);
             this.gameLoopCounter = 0;
