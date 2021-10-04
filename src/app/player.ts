@@ -8,6 +8,7 @@ import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
 import { Text } from '@pixi/text'
+import { SoundManager } from "./services/sound-manager/sound-manager.service";
 
 export enum ANIMATION_FRAMES {
     IDLE_UP_LEFT,
@@ -76,6 +77,7 @@ export class Player {
     // Services
     private textureManager: TextureManager = null;
     private pixiManager: PixiManager = null;
+    private soundManager: SoundManager = null;
 
     private tileset: Tileset = null;
 
@@ -97,6 +99,7 @@ export class Player {
         this.direction |= DIRECTON.DOWN;
         this.textureManager = getServiceByClass(TextureManager);
         this.pixiManager = getServiceByClass(PixiManager);
+        this.soundManager = getServiceByClass(SoundManager);
 
         this.loadSprites();
         this.setPlayerAnimation(ANIMATION_FRAMES.IDLE_DOWN_LEFT);
@@ -250,6 +253,9 @@ export class Player {
 
 
             }
+            let sound = this.soundManager.getSound("Dash.wav");
+            sound.loop(false);
+            sound.play();
         }
     }
 
@@ -257,6 +263,7 @@ export class Player {
         this.alive = false;
         if (!this.pixiManager.getContainer().children.includes(this.youDiedText)) {
             this.pixiManager.addChild(this.youDiedText);
+           
 
             setTimeout(() => {
                 if (this.pixiManager.getContainer().children.includes(this.youDiedText)) {
@@ -269,6 +276,9 @@ export class Player {
                 this.playerContainer.filters = [];
                 document.dispatchEvent(new CustomEvent("deadNoLonger"));
             }, this.DEATH_TIME);
+            let sound = this.soundManager.getSound("Death.wav");
+            sound.loop(false);
+            sound.play();
         }
 
         this.playerContainer.filters = [this.glitchFilter];
