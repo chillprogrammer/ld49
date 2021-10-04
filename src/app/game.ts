@@ -128,9 +128,8 @@ export class Game {
         if(this.pixiManager.getContainer().children.includes(playerContainer)) {
             this.pixiManager.removeChild(playerContainer);
         }
-
+        this.respawn();
         setTimeout(()=> {
-            this.respawn();
             this.pixiManager.addChild(playerContainer);
         }, 500)
         
