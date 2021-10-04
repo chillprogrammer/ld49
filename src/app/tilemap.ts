@@ -132,10 +132,6 @@ export class Tilemap {
         }
     }
 
-    triggerTileFall() {
-        console.log("Tile Fall")
-    }
-
     showLevel() {
         if (!this.visible) {
             this.visible = true;
