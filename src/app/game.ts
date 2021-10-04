@@ -11,6 +11,7 @@ import { TitleScreen } from './titlescreen';
 import { DIRECTON, Player } from './player';
 import { laser } from './laser';
 import { LevelManager } from './services/level-manager/level-manager';
+import { Text } from '@pixi/text';
 
 
 export class Game {
@@ -71,7 +72,7 @@ export class Game {
 
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
-
+        document.addEventListener('deadNoLonger', this.respawn.bind(this));
         // Sets the game loop
         this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
@@ -91,6 +92,10 @@ export class Game {
         this.laser = new laser(this.tileMap.getTileset());
     }
 
+    respawn() {
+        this.tileMap.getContainer().filters = [];
+    }
+
     /**
      * The main game loop - with delta time parameter.
      * @param delta the delta time between each frame
@@ -102,7 +107,7 @@ export class Game {
             this.titleScreen.update(delta);
             return;
         }
-
+        
         if(this.gameLoopCounter >= 300)
         {
             this.laser.laserFollow();
@@ -110,52 +115,56 @@ export class Game {
             this.gameLoopCounter = 0;
         }
 
-        if (KeyManager.isKeyPressed('w')) {
-            this.player.moveUp();
-            this.player.direction &= ~DIRECTON.DOWN;
-            this.player.direction |= DIRECTON.UP
-            /*if(!Camera.velocity.x) {
-                this.player.direction &= ~DIRECTON.LEFT;
-                this.player.direction &= ~DIRECTON.RIGHT;
-            }*/
-        } else if (KeyManager.isKeyPressed('s')) {
-            this.player.moveDown();
-            this.player.direction |= DIRECTON.DOWN;
-            this.player.direction &= ~DIRECTON.UP;
-            /*if(!Camera.velocity.x) {
-                this.player.direction &= ~DIRECTON.LEFT;
-                this.player.direction &= ~DIRECTON.RIGHT;
-            }*/
-        } else {
-            Camera.velocity.y = 0;
-        }
-        if (KeyManager.isKeyPressed('a')) {
-            this.player.moveLeft();
-            this.player.direction &= ~DIRECTON.RIGHT;
-            this.player.direction |= DIRECTON.LEFT;
-            /*if(!Camera.velocity.y) {
-                this.player.direction &= ~DIRECTON.UP;
+        if (this.player.alive) {
+            if (KeyManager.isKeyPressed('w')) {
+                this.player.moveUp();
                 this.player.direction &= ~DIRECTON.DOWN;
-            }*/
-        }
-        else if (KeyManager.isKeyPressed('d')) {
-            this.player.moveRight();
-            this.player.direction |= DIRECTON.RIGHT;
-            this.player.direction &= ~DIRECTON.LEFT;
-            /*if(!Camera.velocity.y) {
+                this.player.direction |= DIRECTON.UP
+                /*if(!Camera.velocity.x) {
+                    this.player.direction &= ~DIRECTON.LEFT;
+                    this.player.direction &= ~DIRECTON.RIGHT;
+                }*/
+            } else if (KeyManager.isKeyPressed('s')) {
+                this.player.moveDown();
+                this.player.direction |= DIRECTON.DOWN;
                 this.player.direction &= ~DIRECTON.UP;
-                this.player.direction &= ~DIRECTON.DOWN;
-            }*/
-        } else {
-            Camera.velocity.x = 0;
-        }
-
-        if (KeyManager.isKeyPressed(' ')) {
-            this.player.jump();
-        } else {
-            if (!this.player.currentlyJumping) {
-                this.player.jumpAvailable = true;
+                /*if(!Camera.velocity.x) {
+                    this.player.direction &= ~DIRECTON.LEFT;
+                    this.player.direction &= ~DIRECTON.RIGHT;
+                }*/
+            } else {
+                Camera.velocity.y = 0;
             }
+            if (KeyManager.isKeyPressed('a')) {
+                this.player.moveLeft();
+                this.player.direction &= ~DIRECTON.RIGHT;
+                this.player.direction |= DIRECTON.LEFT;
+                /*if(!Camera.velocity.y) {
+                    this.player.direction &= ~DIRECTON.UP;
+                    this.player.direction &= ~DIRECTON.DOWN;
+                }*/
+            }
+            else if (KeyManager.isKeyPressed('d')) {
+                this.player.moveRight();
+                this.player.direction |= DIRECTON.RIGHT;
+                this.player.direction &= ~DIRECTON.LEFT;
+                /*if(!Camera.velocity.y) {
+                    this.player.direction &= ~DIRECTON.UP;
+                    this.player.direction &= ~DIRECTON.DOWN;
+                }*/
+            } else {
+                Camera.velocity.x = 0;
+            }
+
+            if (KeyManager.isKeyPressed(' ')) {
+                this.player.jump();
+            } else {
+                if (!this.player.currentlyJumping) {
+                    this.player.jumpAvailable = true;
+                }
+            }
+        } else {
+            Camera.velocity.x = Camera.velocity.y = 0;
         }
 
         if (this.tileMap) {

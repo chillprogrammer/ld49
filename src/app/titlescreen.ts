@@ -1,5 +1,6 @@
 import { Filter, Texture } from "@pixi/core";
 import { Container } from "@pixi/display";
+import { RGBSplitFilter } from "@pixi/filter-rgb-split";
 import { Sprite } from "@pixi/sprite";
 import { Application, filters, Text } from 'pixi.js';
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
@@ -22,7 +23,7 @@ export class TitleScreen {
 
     private TITLE_COLOR: number = 0xFFD700;
     private BUTTON_COLOR_HOVER: number = 0xFF0000;
-    private BUTTON_COLOR: number = 0x000000;
+    private BUTTON_COLOR: number = 0x111111;
 
 
     constructor() {
@@ -30,6 +31,7 @@ export class TitleScreen {
     }
 
     init() {
+
         this.pixiManager = getServiceByClass(PixiManager);
         this.textureManager = getServiceByClass(TextureManager);
         this.app = this.pixiManager.getApp();
@@ -40,8 +42,9 @@ export class TitleScreen {
 
         this.playButton = Sprite.from(Texture.WHITE);
         this.playButton.tint = this.BUTTON_COLOR;
+        this.playButton.alpha = 0.5
         this.playButton.scale.set(PixiManager.INITIAL_WIDTH / 42, 5);
-        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width / 2, PixiManager.INITIAL_HEIGHT / 1.5);
+        this.playButton.position.set(PixiManager.INITIAL_WIDTH / 2 - this.playButton.width + 35, PixiManager.INITIAL_HEIGHT / 1.3);
         (<any>this.playButton).interactive = true;
         this.container.addChild(this.playButton);
 
@@ -49,7 +52,7 @@ export class TitleScreen {
         this.playText.position.set(this.playButton.position.x + this.playButton.width / 2 - this.playText.width / 2, this.playButton.position.y + this.playButton.height / 2 - this.playText.height / 2);
         this.container.addChild(this.playText);
 
-        this.titleText = new Text('GAME TITLE', { fontSize: 73, fill: this.TITLE_COLOR, align: 'center' });
+        this.titleText = new Text('GLITCH DRIVE', { fontSize: 73, fill: this.TITLE_COLOR, align: 'center' });
         this.titleText.zIndex = 10;
         this.titleText.style.dropShadow = true;
         this.titleText.style.dropShadowDistance = 4;
@@ -59,8 +62,14 @@ export class TitleScreen {
         this.titleText.anchor.x = 0.5
         this.container.addChild(this.titleText);
 
+        const rgbSplitFilter = new RGBSplitFilter();
+        this.container.filters = [rgbSplitFilter];
 
-
+        //const displacementFilter: 
+        //this.container.filters = [rgbSplitFilter];
+        const displacementSprite = Sprite.from('./assets/displacement.png');
+        const dispFilter = new filters.DisplacementFilter(displacementSprite, 50);
+        this.titleText.filters = [rgbSplitFilter, dispFilter]
         this.mouseHandlers();
     }
 
@@ -103,7 +112,7 @@ export class TitleScreen {
     update(delta: number) {
         const maxRight: number = 5;
         const maxLeft: number = -5;
-        const rotateSpeed = 0.2*delta;
+        const rotateSpeed = 0.05*delta;
 
         if (this.rotateFlag === 1) {
             this.titleAngle += rotateSpeed;

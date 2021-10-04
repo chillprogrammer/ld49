@@ -1,14 +1,13 @@
-import { Filter } from "@pixi/core";
 import { Container } from "@pixi/display";
+import { PixelateFilter } from "@pixi/filter-pixelate";
 import { ShockwaveFilter } from "@pixi/filter-shockwave";
 import { AnimatedSprite } from "@pixi/sprite-animated";
-import { filters } from "pixi.js";
 import { Camera } from "./services/camera/camera";
-import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
+import { Text } from '@pixi/text'
 
 export enum ANIMATION_FRAMES {
     IDLE_UP_LEFT,
@@ -39,7 +38,9 @@ export class Player {
     public jumpAvailable = true;
     public currentlyJumping = false;
     private JUMP_DISTANCE: number = 200;
-    private glitchFilter: ShockwaveFilter;
+    private glitchFilter: PixelateFilter;
+    private shockwaveFilter: ShockwaveFilter;
+    private DEATH_TIME: number = 3000;
 
     public position = {
         x: 0,
@@ -78,6 +79,7 @@ export class Player {
 
     private playerContainer: Container = null;
     private playerEffectsContainer: Container = null;
+    private youDiedText: Text = null;
 
     constructor(tSet: Tileset) {
         this.tileset = tSet;
@@ -101,12 +103,17 @@ export class Player {
         this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
 
         this.loadFilters();
+
+        this.youDiedText = new Text('YOU DIED', { fontSize: 82, fill: 0xFFD700, align: 'center' });
+        this.youDiedText.position.set(PixiManager.INITIAL_WIDTH / 2 - this.youDiedText.width / 2, PixiManager.INITIAL_HEIGHT / 2 - this.youDiedText.height);
+        this.youDiedText.style.dropShadow = true;
+        this.youDiedText.style.dropShadowDistance = 10;
+        this.youDiedText.style.dropShadowColor = '0x222222';
     }
 
     loadFilters() {
-        this.glitchFilter = new ShockwaveFilter()
-        this.glitchFilter.time = 0;
-
+        this.glitchFilter = new PixelateFilter();
+        this.shockwaveFilter = new ShockwaveFilter();
     }
 
     setPlayerAnimation(animationEvent: number) {
@@ -234,8 +241,23 @@ export class Player {
 
     dead() {
         this.alive = false;
-        console.log("DEAD")
-       // this.playerContainer.filters = [this.glitchFilter]
+        if (!this.pixiManager.getContainer().children.includes(this.youDiedText)) {
+            this.pixiManager.addChild(this.youDiedText);
+
+            setTimeout(() => {
+                if (this.pixiManager.getContainer().children.includes(this.youDiedText)) {
+                    this.pixiManager.removeChild(this.youDiedText);
+                }
+                this.alive = true;
+                console.log("ALIVE")
+                Camera.pos.x = 0;
+                Camera.pos.y = 0;
+                this.playerContainer.filters = [];
+                document.dispatchEvent(new CustomEvent("deadNoLonger"));
+            }, this.DEATH_TIME);
+        }
+
+        this.playerContainer.filters = [this.glitchFilter];
     }
 
     loadSprites(): void {
@@ -406,7 +428,6 @@ export class Player {
     }
 
     update(delta: number) {
-
         if (!this.currentlyJumping) {
             if (!Camera.velocity.x && !Camera.velocity.y) {
                 // IDLE Animations
@@ -452,6 +473,11 @@ export class Player {
                     }
                 }
             }
+        }
+
+        if (!this.alive) {
+            this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
+            return;
         }
 
         this.position.x = Camera.pos.x + PixiManager.INITIAL_WIDTH / 2;
