@@ -2,10 +2,11 @@ import { Sprite, Container } from "pixi.js";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
-import * as overworld_tileset from '../assets/tilesets/Tileset.json'; // TODO remove
+import * as overworld_tileset from '../assets/tilesets/Tileset.json';
 import { Tileset } from "./tileset";
 import { Player } from "./player";
 import { PixelateFilter } from "@pixi/filter-pixelate";
+
 interface TiledMapObject {
     backgroundcolor: string,
     compressionlevel: number,
@@ -65,6 +66,9 @@ export class Tilemap {
     // Utility Variables
     private visible: boolean = false;
 
+    private tilesFalling: Sprite[] = [];
+    private tileFallSpeed = 0.5;
+
     constructor() {
         this.init();
     }
@@ -92,6 +96,7 @@ export class Tilemap {
         this.pixiManager.removeChild(this.tilemapContainer);
         this.tilemapContainer.destroy();
         this.tilemapContainer = null;
+        this.tilesFalling = [];
     }
 
     getWidth(): number { return this.tileMap ? this.tileMap.width : 0; }
@@ -127,6 +132,10 @@ export class Tilemap {
         }
     }
 
+    triggerTileFall() {
+        console.log("Tile Fall")
+    }
+
     showLevel() {
         if (!this.visible) {
             this.visible = true;
@@ -141,7 +150,21 @@ export class Tilemap {
         }
     }
 
+    reset() {
+        this.tilemapContainer.removeChildren();
+        this.tileIDList = [];
+        this.loadLevel(this.tileMap);
+    }
+
     update(delta: number, player?: Player) {
+        for (let i = 0; i < this.tilemapContainer.children.length; i++) {
+            let spriteTile: Sprite = <Sprite>this.tilemapContainer.children[i];
+            if (this.tilesFalling.includes(spriteTile)) {
+                //spriteTile.tint = 0x0000FF;
+                spriteTile.position.y += this.tileFallSpeed * delta;
+            }
+        }
+
         if (player) {
             let collision = false;
             for (let i = 0; i < this.tilemapContainer.children.length; ++i) {
@@ -150,6 +173,9 @@ export class Tilemap {
                 if (PixiManager.boxCollision(player.getContainer(), <Sprite>tile)) {
                     if (tileID != 0) {
                         collision = true;
+                        if (player.hasMoved) {
+                            this.tilesFalling.push(tile);
+                        }
                     }
                 }
             }
