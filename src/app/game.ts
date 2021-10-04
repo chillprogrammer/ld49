@@ -79,6 +79,10 @@ export class Game {
         this.titleScreen = new TitleScreen();
         this.titleScreen.display();
 
+        let sound = this.soundManager.getSound("Synth_but_perfect_loop.mp3");
+        sound.loop(true);
+        sound.play();
+
         this.levelManager.loadLevels();
 
         /*
@@ -111,16 +115,16 @@ export class Game {
         
         if(this.gameLoopCounter >= 300)
         {
-            this.laser.laserFollow(this.player);
+            //this.laser.laserFollow(this.player);
 
         if (this.gameLoopCounter > 150 && this.gameLoopCounter < 160) {
             this.tileMap.triggerTileFall();
         }
-        if (this.gameLoopCounter >= 300) {
+        /*if (this.gameLoopCounter >= 300) {
             //this.laser.laserFollow(this.player: Player);
             console.log("a")
             this.gameLoopCounter = 0;
-        }
+        }*/
 
         if (this.player.alive) {
             if (KeyManager.isKeyPressed('w')) {
