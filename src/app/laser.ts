@@ -7,10 +7,7 @@ import { Tileset } from "./tileset";
 import { Camera } from "./services/camera/camera";
 
 export enum ANIMATION_FRAMES {
-    LASER_1,
-    LASER_2,
-    LASER_3,
-    LASER_4
+    LASER_1
 };
 
 export class laser {
@@ -120,19 +117,27 @@ export class laser {
             }
             this.laser1[i].y = this.tileset.getTilesetInterface().tileheight * row;
             this.laser1[i].x = this.tileset.getTilesetInterface().tilewidth * (i % 4);
-            console.log(row);
         }
 
     }
 
     laserFollow()
     {
-        
+        for(let i = 0; i < this.laser1.length; i++)
+        {
+            this.laser1[i].loop = true;
+            this.laser1[i].onLoop = () => {
+                this.laser1[i].loop = false;
+                if (this.laser1[i].gotoAndStop) {
+                    this.laser1[i].gotoAndStop(0);
+                }
+            }
+        }
+         
     }
 
     update(delta: number) {
-        this.setLaserAnimation(ANIMATION_FRAMES.LASER_1)
-
+        
     }
 
 }
