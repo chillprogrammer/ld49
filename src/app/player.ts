@@ -1,19 +1,13 @@
-import { Filter } from "@pixi/core";
 import { Container } from "@pixi/display";
-import { GlitchFilter } from "@pixi/filter-glitch";
 import { PixelateFilter } from "@pixi/filter-pixelate";
 import { ShockwaveFilter } from "@pixi/filter-shockwave";
-import { TwistFilter } from "@pixi/filter-twist";
 import { AnimatedSprite } from "@pixi/sprite-animated";
-import { filters, Sprite } from "pixi.js";
 import { Camera } from "./services/camera/camera";
-import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
 import { Text } from '@pixi/text'
-import { RGBSplitFilter } from "pixi-filters";
 
 export enum ANIMATION_FRAMES {
     IDLE_UP_LEFT,

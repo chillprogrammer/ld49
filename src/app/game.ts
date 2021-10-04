@@ -9,6 +9,7 @@ import { UserProfile } from './services/user-profile/user-profile.service';
 import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
 import { DIRECTON, Player } from './player';
+import { laser } from './laser';
 import { LevelManager } from './services/level-manager/level-manager';
 import { Text } from '@pixi/text';
 
@@ -27,7 +28,8 @@ export class Game {
 
     private titleScreen: TitleScreen = null;
     private player: Player = null;
-
+    private laser: laser = null;
+    private gameLoopCounter: number = 0;
 
     constructor() {
         this.pixiManager = getServiceByClass(PixiManager);
@@ -87,6 +89,7 @@ export class Game {
     titleScreenPlayButtonClicked() {
         this.tileMap = this.levelManager.chooseLevel(0);
         this.player = new Player(this.tileMap.getTileset());
+        this.laser = new laser(this.tileMap.getTileset());
     }
 
     respawn() {
@@ -98,10 +101,18 @@ export class Game {
      * @param delta the delta time between each frame
      */
     gameLoop(delta: number) {
+         this.gameLoopCounter += delta;
 
         if (this.titleScreen && this.titleScreen.isShowing()) {
             this.titleScreen.update(delta);
             return;
+        }
+        
+        if(this.gameLoopCounter >= 300)
+        {
+            this.laser.laserFollow();
+            console.log("a")
+            this.gameLoopCounter = 0;
         }
 
         if (this.player.alive) {
@@ -166,6 +177,10 @@ export class Game {
             this.player.update(delta);
         }
 
+        if (this.laser) {
+            this.laser.update(delta);
+        }
+    
 
         Camera.update(delta);
     }

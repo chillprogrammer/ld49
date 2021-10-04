@@ -1,15 +1,11 @@
-import { AnimatedSprite, Sprite, Container, TilingSprite } from "pixi.js";
+import { Sprite, Container } from "pixi.js";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import * as overworld_tileset from '../assets/tilesets/Tileset.json'; // TODO remove
 import { Tileset } from "./tileset";
-import { Camera } from "./services/camera/camera";
-import * as PIXI from "pixi.js";
 import { Player } from "./player";
-import { ShockwaveFilter } from "@pixi/filter-shockwave";
 import { PixelateFilter } from "@pixi/filter-pixelate";
-
 interface TiledMapObject {
     backgroundcolor: string,
     compressionlevel: number,
