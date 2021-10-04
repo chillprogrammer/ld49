@@ -10,6 +10,7 @@ import { Camera } from './services/camera/camera';
 import { TitleScreen } from './titlescreen';
 import { DIRECTON, Player } from './player';
 import { LevelManager } from './services/level-manager/level-manager';
+import { Text } from '@pixi/text';
 
 
 export class Game {

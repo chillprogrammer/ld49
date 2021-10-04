@@ -5,13 +5,15 @@ import { PixelateFilter } from "@pixi/filter-pixelate";
 import { ShockwaveFilter } from "@pixi/filter-shockwave";
 import { TwistFilter } from "@pixi/filter-twist";
 import { AnimatedSprite } from "@pixi/sprite-animated";
-import { filters } from "pixi.js";
+import { filters, Sprite } from "pixi.js";
 import { Camera } from "./services/camera/camera";
 import { KeyManager } from "./services/keyboard-manager/key-manager.service";
 import { PixiManager } from "./services/pixi-manager/pixi-manager.service";
 import { getServiceByClass } from "./services/service-injector.module";
 import { TextureManager } from "./services/texture-manager/texture-manager.service";
 import { Tileset } from "./tileset";
+import { Text } from '@pixi/text'
+import { RGBSplitFilter } from "pixi-filters";
 
 export enum ANIMATION_FRAMES {
     IDLE_UP_LEFT,
@@ -82,6 +84,7 @@ export class Player {
 
     private playerContainer: Container = null;
     private playerEffectsContainer: Container = null;
+    private youDiedText: Text = null;
 
     constructor(tSet: Tileset) {
         this.tileset = tSet;
@@ -105,6 +108,12 @@ export class Player {
         this.playerContainer.scale.set(Camera.zoom, Camera.zoom);
 
         this.loadFilters();
+
+        this.youDiedText = new Text('YOU DIED', { fontSize: 82, fill: 0xFFD700, align: 'center' });
+        this.youDiedText.position.set(PixiManager.INITIAL_WIDTH / 2 - this.youDiedText.width / 2, PixiManager.INITIAL_HEIGHT / 2 - this.youDiedText.height);
+        this.youDiedText.style.dropShadow = true;
+        this.youDiedText.style.dropShadowDistance = 10;
+        this.youDiedText.style.dropShadowColor = '0x222222';
     }
 
     loadFilters() {
@@ -237,8 +246,16 @@ export class Player {
 
     dead() {
         this.alive = false;
-        console.log("DEAD")
-       this.playerContainer.filters = [this.glitchFilter];
+        if (!this.pixiManager.getContainer().children.includes(this.youDiedText)) {
+            this.pixiManager.addChild(this.youDiedText);
+
+            //const rgbSplitFilter = new RGBSplitFilter();
+            //const displacementSprite = Sprite.from('./assets/displacement.png');
+            //const dispFilter = new filters.DisplacementFilter(displacementSprite, 20);
+            //this.youDiedText.filters = [rgbSplitFilter, dispFilter]
+        }
+
+        this.playerContainer.filters = [this.glitchFilter];
     }
 
     loadSprites(): void {
@@ -456,7 +473,7 @@ export class Player {
             }
         }
 
-        if(!this.alive) {
+        if (!this.alive) {
             this.setPlayerAnimation(ANIMATION_FRAMES.RUN_RIGHT);
             return;
         }
