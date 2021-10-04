@@ -33,6 +33,8 @@ export class Game {
     private laser: laser = null;
     private gameLoopCounter: number = 0;
 
+    private goalText: Text = null;
+
     constructor() {
         this.pixiManager = getServiceByClass(PixiManager);
         this.soundManager = getServiceByClass(SoundManager);
@@ -88,6 +90,13 @@ export class Game {
 
         this.levelManager.loadLevels();
 
+        this.goalText = new Text('Goal: Find the helicopter and escape!\n\nUse WASD to run.\nSpacebar while running to dash!', { fontSize: 18, fill: 0xFFD700, align: 'left' });
+        this.goalText.position.set(10, 5);
+        this.goalText.style.dropShadow = true;
+        this.goalText.style.dropShadowDistance = 2;
+        this.goalText.style.dropShadowColor = '0x222222';
+        this.goalText.zIndex = 100;
+
         /*
             // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
         */
@@ -97,6 +106,8 @@ export class Game {
         this.tileMap = this.levelManager.chooseLevel(0);
         this.player = new Player(this.tileMap.getTileset());
         this.laser = new laser(this.tileMap.getTileset());
+        
+        this.pixiManager.addChild(this.goalText);
     }
 
     respawn() {
