@@ -110,7 +110,7 @@ export class Game {
         
         if(this.gameLoopCounter >= 300)
         {
-            this.laser.laserFollow();
+            this.laser.laserFollow(this.player);
             console.log("a")
             this.gameLoopCounter = 0;
         }
