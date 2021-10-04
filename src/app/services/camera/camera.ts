@@ -19,6 +19,17 @@ export class Camera {
 
     }
 
+    static reset() {
+        Camera.pos = {
+            x: 0,
+            y: 0
+        };
+        Camera.velocity = {
+            x: 0,
+            y: 0
+        };
+    }
+
     static update(delta: number) {
         Camera.pos.x += Camera.velocity.x * delta;
         Camera.pos.y += Camera.velocity.y * delta;

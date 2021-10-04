@@ -26,10 +26,14 @@ export class Game {
     // Managers
     private tileMap: Tilemap = null;
 
+    private CURRENT_LEVEL: number = 0;
+
     private titleScreen: TitleScreen = null;
     private player: Player = null;
     private laser: laser = null;
     private gameLoopCounter: number = 0;
+
+    private goalText: Text = null;
 
     constructor() {
         this.pixiManager = getServiceByClass(PixiManager);
@@ -73,6 +77,7 @@ export class Game {
         // Event Listeners
         document.addEventListener('titlescreenPlayButtonClicked', this.titleScreenPlayButtonClicked.bind(this));
         document.addEventListener('deadNoLonger', this.respawn.bind(this));
+        document.addEventListener('levelWon', this.levelWon.bind(this));
         // Sets the game loop
         this.pixiManager.setGameLoop(this.gameLoop.bind(this));
 
@@ -85,6 +90,13 @@ export class Game {
 
         this.levelManager.loadLevels();
 
+        this.goalText = new Text('Goal: Find the helicopter and escape!\n\nUse WASD to run.\nSpacebar while running to dash!', { fontSize: 18, fill: 0xFFD700, align: 'left' });
+        this.goalText.position.set(10, 5);
+        this.goalText.style.dropShadow = true;
+        this.goalText.style.dropShadowDistance = 2;
+        this.goalText.style.dropShadowColor = '0x222222';
+        this.goalText.zIndex = 100;
+
         /*
             // TODO Remove - Creates a temporary Tilemap without a "Level" Manager
         */
@@ -94,11 +106,34 @@ export class Game {
         this.tileMap = this.levelManager.chooseLevel(0);
         this.player = new Player(this.tileMap.getTileset());
         this.laser = new laser(this.tileMap.getTileset());
+        
+        this.pixiManager.addChild(this.goalText);
     }
 
     respawn() {
         this.tileMap.getContainer().filters = [];
         this.tileMap.reset();
+    }
+
+    levelWon() {
+        Camera.reset();
+        this.CURRENT_LEVEL++;
+        if (this.CURRENT_LEVEL > 1) {
+            this.CURRENT_LEVEL = 0;
+        }
+
+        this.levelManager.getCurrentLevelTilemap().hideLevel();
+        this.tileMap = this.levelManager.chooseLevel(this.CURRENT_LEVEL);
+        let playerContainer = this.player.getContainer();
+        if(this.pixiManager.getContainer().children.includes(playerContainer)) {
+            this.pixiManager.removeChild(playerContainer);
+        }
+
+        setTimeout(()=> {
+            this.respawn();
+            this.pixiManager.addChild(playerContainer);
+        }, 500)
+        
     }
 
     /**
@@ -114,9 +149,9 @@ export class Game {
         }
 
         if (this.gameLoopCounter > 150 && this.gameLoopCounter < 160) {
-            
+
         }
-        
+
         if (this.gameLoopCounter >= 300) {
             //this.laser.laserFollow(this.player);
             this.gameLoopCounter = 0;

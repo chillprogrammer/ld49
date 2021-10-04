@@ -298,7 +298,7 @@ export class Player {
                 Camera.pos.x = 0;
                 Camera.pos.y = 0;
                 this.playerContainer.filters = [];
-                document.dispatchEvent(new CustomEvent("deadNoLonger"));
+                document.dispatchEvent(new CustomEvent("levelWon"));
             }, this.WIN_TIME);
         }
 

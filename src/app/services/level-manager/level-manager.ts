@@ -1,5 +1,6 @@
 import { Tilemap } from "../../tilemap";
 const map1Data = require('../../../assets/maps/map1.json')
+const map2Data = require('../../../assets/maps/map2.json')
 
 export class LevelManager {
 
@@ -14,6 +15,10 @@ export class LevelManager {
         let tileMap = new Tilemap();
         tileMap.loadLevel(map1Data);
         this.levelList.push(tileMap)
+
+        let tileMap2 = new Tilemap();
+        tileMap2.loadLevel(map2Data);
+        this.levelList.push(tileMap2)
     }
 
     chooseLevel(level: number): Tilemap {
