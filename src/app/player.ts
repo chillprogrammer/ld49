@@ -42,6 +42,7 @@ export class Player {
     private glitchFilter: PixelateFilter;
     private shockwaveFilter: ShockwaveFilter;
     private DEATH_TIME: number = 3000;
+    private WIN_TIME: number = 5000;
 
     public position = {
         x: 0,
@@ -81,6 +82,7 @@ export class Player {
     private playerContainer: Container = null;
     private playerEffectsContainer: Container = null;
     private youDiedText: Text = null;
+    private youWinText: Text = null;
 
     constructor(tSet: Tileset) {
         this.tileset = tSet;
@@ -111,6 +113,12 @@ export class Player {
         this.youDiedText.style.dropShadow = true;
         this.youDiedText.style.dropShadowDistance = 10;
         this.youDiedText.style.dropShadowColor = '0x222222';
+
+        this.youWinText = new Text('YOU WIN', { fontSize: 82, fill: 0x0000FF, align: 'center' });
+        this.youWinText.position.set(PixiManager.INITIAL_WIDTH / 2 - this.youWinText.width / 2, PixiManager.INITIAL_HEIGHT / 2 - this.youWinText.height);
+        this.youWinText.style.dropShadow = true;
+        this.youWinText.style.dropShadowDistance = 10;
+        this.youWinText.style.dropShadowColor = '0x222222';
     }
 
     loadFilters() {
@@ -256,12 +264,32 @@ export class Player {
                 }
                 this.alive = true;
                 this.hasMoved = false;
-                console.log("ALIVE")
                 Camera.pos.x = 0;
                 Camera.pos.y = 0;
                 this.playerContainer.filters = [];
                 document.dispatchEvent(new CustomEvent("deadNoLonger"));
             }, this.DEATH_TIME);
+        }
+
+        this.playerContainer.filters = [this.glitchFilter];
+    }
+
+    win() {
+        this.alive = false;
+        if (!this.pixiManager.getContainer().children.includes(this.youWinText)) {
+            this.pixiManager.addChild(this.youWinText);
+
+            setTimeout(() => {
+                if (this.pixiManager.getContainer().children.includes(this.youWinText)) {
+                    this.pixiManager.removeChild(this.youWinText);
+                }
+                this.alive = true;
+                this.hasMoved = false;
+                Camera.pos.x = 0;
+                Camera.pos.y = 0;
+                this.playerContainer.filters = [];
+                document.dispatchEvent(new CustomEvent("deadNoLonger"));
+            }, this.WIN_TIME);
         }
 
         this.playerContainer.filters = [this.glitchFilter];

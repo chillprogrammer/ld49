@@ -16,12 +16,6 @@ export class SoundManager {
     }
 
     private init() {
-        var sound = new Howl({
-            src: ['assets/Sound/Synth_but_perfect_loop.mp3'],
-            autoplay: false,
-            loop: false,
-            volume: 0.1
-        });
 
     }
 

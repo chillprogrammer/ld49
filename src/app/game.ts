@@ -112,19 +112,15 @@ export class Game {
             this.titleScreen.update(delta);
             return;
         }
-        
-        if(this.gameLoopCounter >= 300)
-        {
-            //this.laser.laserFollow(this.player);
 
         if (this.gameLoopCounter > 150 && this.gameLoopCounter < 160) {
-            this.tileMap.triggerTileFall();
+            
         }
-        /*if (this.gameLoopCounter >= 300) {
-            //this.laser.laserFollow(this.player: Player);
-            console.log("a")
+        
+        if (this.gameLoopCounter >= 300) {
+            //this.laser.laserFollow(this.player);
             this.gameLoopCounter = 0;
-        }*/
+        }
 
         if (this.player.alive) {
             if (KeyManager.isKeyPressed('w')) {
@@ -178,5 +174,4 @@ export class Game {
 
         Camera.update(delta);
     }
-}
 }

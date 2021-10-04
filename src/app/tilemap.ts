@@ -62,6 +62,7 @@ export class Tilemap {
     private tileIDList: number[] = [];
     private tileMap: TiledMapObject = null;
     private tileset: Tileset = null;
+    private gameWinTiles: number[] = [];
 
     // Utility Variables
     private visible: boolean = false;
@@ -82,6 +83,12 @@ export class Tilemap {
         // TODO make dynamic to use webservice
         this.tileset = new Tileset();
         this.tileset.loadTileset(overworld_tileset as any)
+
+        for (let i = 3521; i <= 3534; i++) {
+            for (let j = 0; j <= 4; j++) {
+                this.gameWinTiles.push(i + (j * 32));
+            }
+        }
     }
 
     getTileset(): Tileset { return this.tileset; }
@@ -132,10 +139,6 @@ export class Tilemap {
         }
     }
 
-    triggerTileFall() {
-        console.log("Tile Fall")
-    }
-
     showLevel() {
         if (!this.visible) {
             this.visible = true;
@@ -157,10 +160,10 @@ export class Tilemap {
     }
 
     update(delta: number, player?: Player) {
+        
         for (let i = 0; i < this.tilemapContainer.children.length; i++) {
             let spriteTile: Sprite = <Sprite>this.tilemapContainer.children[i];
             if (this.tilesFalling.includes(spriteTile)) {
-                //spriteTile.tint = 0x0000FF;
                 spriteTile.position.y += this.tileFallSpeed * delta;
             }
         }
@@ -173,8 +176,13 @@ export class Tilemap {
                 if (PixiManager.boxCollision(player.getContainer(), <Sprite>tile)) {
                     if (tileID != 0) {
                         collision = true;
-                        if (player.hasMoved) {
-                            this.tilesFalling.push(tile);
+
+                        if (this.gameWinTiles.includes(tileID)) {
+                            player.win();
+                        } else {
+                            if (player.hasMoved) {
+                                this.tilesFalling.push(tile);
+                            }
                         }
                     }
                 }
